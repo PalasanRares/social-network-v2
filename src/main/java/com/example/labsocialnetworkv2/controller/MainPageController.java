@@ -6,11 +6,20 @@ import com.example.labsocialnetworkv2.utils.events.RemoveUserEvent;
 import com.example.labsocialnetworkv2.utils.observer.Observer;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -18,8 +27,15 @@ import java.util.stream.StreamSupport;
 public class MainPageController implements Observer<RemoveUserEvent> {
     private Service service;
 
-    ObservableList<User> model = FXCollections.observableArrayList();
 
+    ObservableList<User> model = FXCollections.observableArrayList();
+    @FXML private AnchorPane anp;
+    @FXML
+    private Label welcomeText;
+    @FXML
+    private Button loginButton;
+    @FXML
+    TextField loginTextField;
     @FXML
     TableView<User> tableView;
     @FXML
@@ -55,5 +71,30 @@ public class MainPageController implements Observer<RemoveUserEvent> {
     @Override
     public void update(RemoveUserEvent event) {
         initModel();
+    }
+
+
+    public void onLoginButtonClick() throws IOException {
+        //ia datele din textfield
+
+
+
+        Integer value1 = Integer.valueOf(loginTextField.getText());
+        welcomeText.setText(value1.toString());
+        Boolean userExist =service.loginUser(value1);
+        if(!userExist){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText("Login Error");
+        alert.setContentText("The UserId you tried to logged in with does not exist!");
+
+        alert.showAndWait();}
+        else{
+           //change scene
+
+
+
+
+        }
     }
 }
