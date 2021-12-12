@@ -190,7 +190,7 @@ public class Service implements Observable<RemoveUserEvent> {
                         //update reply sa fie null pt ca nu mai exista mesajul
                             Message ms= new Message(null,null,m.getMessage(),null,null);
                             ms.setId(m.getId());
-                            messageRepository.modify(ms);
+                            messageRepository.modify(ms,false);
                     }
                 }
             }
@@ -200,19 +200,21 @@ public class Service implements Observable<RemoveUserEvent> {
         }
 
     }
-    public void modifyMessage(Integer id,String msg,Integer reply){
+    public void modifyMessage(Integer id,String msg,Integer reply,Boolean all){
         if(id == null)throw new NullPointerException("id must not be null");
         Message m = messageRepository.findOne(id);
         if(m == null)throw new MessageNotFoundException("message not found");
         try {
             Message ms= new Message(null,null,msg,null,messageRepository.findOne(reply));
             ms.setId(id);
-            messageRepository.modify(ms);
+
+            messageRepository.modify(ms,all);
 
         } catch (RuntimeException ex) {
             System.out.println(ex.getMessage());
         }
     }
+
     public void removeUser(String id) {
         try {
             User user = userRepository.findOne(Integer.parseInt(id));
