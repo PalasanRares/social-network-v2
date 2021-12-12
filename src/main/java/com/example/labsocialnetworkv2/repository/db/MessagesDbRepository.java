@@ -80,6 +80,18 @@ public class MessagesDbRepository implements ConvRepository<Integer, Message> {
             e.printStackTrace();
         }
     }
+    public void removeReceivers(Integer msgId){
+        String sql = "DELETE FROM \"MessagesUsers\" WHERE \"MessageId\" =?;";
+        try (Connection connection = DriverManager.getConnection(url, username, password);
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setInt(1,msgId);
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
     @Override
     public void remove(Integer integer) {
         String sql = "DELETE FROM \"Messages\" WHERE \"Id\" = ?";
@@ -245,10 +257,11 @@ public class MessagesDbRepository implements ConvRepository<Integer, Message> {
     }
 
     @Override
-    public boolean modify(Message newEntity) {
+    public boolean modify(Message newEntity,Boolean all) {
         //if(newEntity.getId()==null)throw NullPointerException("Id must not be null");
         //if(findOne(newEntity.getId())==null)throw MessageNotFoundException("The message you want to modify does not exist!");
         //de mutat in service
+        //if(all)removeReceivers(newEntity.getId());
         String sql = "UPDATE \"Messages\" SET \"Message\" = ? , \"ReplyTo\" = ? WHERE \"Id\" = ? ";
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -259,6 +272,17 @@ public class MessagesDbRepository implements ConvRepository<Integer, Message> {
             }
             else {
                 ps.setInt(2,newEntity.getReply().getId());
+                if(all){
+                    List<User> m=getReceiversList(newEntity.getReply().getId());
+
+
+                    m.add(newEntity.getReply().getSender());
+
+                    m.remove(findOne(newEntity.getId()).getSender());
+                    System.out.println(m);
+                    removeReceivers(newEntity.getId());
+                    saveReceivers(newEntity.getId(),m);}
+
             }
             ps.setInt(3, newEntity.getId());
             ps.executeUpdate();
@@ -269,6 +293,7 @@ public class MessagesDbRepository implements ConvRepository<Integer, Message> {
         }
         return true;
     }
+
 
     @Override
     public Iterable<Message> findAllForId(Integer integer) {

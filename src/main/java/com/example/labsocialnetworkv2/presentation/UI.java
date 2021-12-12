@@ -42,7 +42,14 @@ public class UI {
         if (service.getLoggedInUser() == null) {
             System.out.println("You are not logged in");
         }else{
-            service.modifyMessage(Integer.parseInt(args[0]),args[1],Integer.parseInt(args[2]));
+            service.modifyMessage(Integer.parseInt(args[0]),args[1],Integer.parseInt(args[2]),false);
+        }
+    }
+    private void uiReplyAll(String[] args){
+        if (service.getLoggedInUser() == null) {
+            System.out.println("You are not logged in");
+        }else{
+            service.modifyMessage(Integer.parseInt(args[0]),args[1],Integer.parseInt(args[2]),true);
         }
     }
     private void uiRemoveMessage(String arg)
@@ -130,6 +137,7 @@ public class UI {
         System.out.println("sendMessage <ReceiverId1> ...<ReceiverIdN> <0> <Message>");
         System.out.println("removeMessage <MessageId>");
         System.out.println("editMessage <MessageId> <Message> <ReplyMsgId>");
+        System.out.println("replyAll <MessageId> <Message> <ReplyMsgId>");
         System.out.println("conversatie <UserId1> <UserId2>");
         System.out.println("exit");
 
@@ -199,6 +207,7 @@ public class UI {
                 case "sendMessage" -> uiSendMessage(Arrays.copyOfRange(args, 1, args.length));
                 case "removeMessage" -> uiRemoveMessage(args[1]);
                 case "editMessage" -> uiEditMessage(Arrays.copyOfRange(args, 1, args.length));
+                case "replyAll" -> uiReplyAll(Arrays.copyOfRange(args, 1, args.length));
                 case "conversatie" -> uiConversatie(args[1],args[2]);
             }
         }
