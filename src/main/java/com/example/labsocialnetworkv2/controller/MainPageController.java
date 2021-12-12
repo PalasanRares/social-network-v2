@@ -43,7 +43,6 @@ public class MainPageController implements Observer<RemoveUserEvent> {
 
     public void setService(Service service) {
         this.service = service;
-        service.loginUser(4);
         service.addObserver(this);
         initModel();
     }
@@ -58,7 +57,6 @@ public class MainPageController implements Observer<RemoveUserEvent> {
     }
 
     private void initModel() {
-        service.loginUser(4);
         Iterable<User> users = service.findLoggedUsersFriends();
         List<User> userList = StreamSupport.stream(users.spliterator(), false).collect(Collectors.toList());
         model.setAll(userList);
