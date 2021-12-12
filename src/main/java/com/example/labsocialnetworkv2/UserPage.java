@@ -2,10 +2,7 @@ package com.example.labsocialnetworkv2;
 
 import com.example.labsocialnetworkv2.application.Service;
 import com.example.labsocialnetworkv2.controller.MainPageController;
-import com.example.labsocialnetworkv2.domain.*;
-import com.example.labsocialnetworkv2.repository.ConvRepository;
-import com.example.labsocialnetworkv2.repository.ModifiableRepository;
-import com.example.labsocialnetworkv2.repository.Repository;
+import com.example.labsocialnetworkv2.controller.UserPageController;
 import com.example.labsocialnetworkv2.repository.db.FriendRequestDbRepository;
 import com.example.labsocialnetworkv2.repository.db.FriendshipDbRepository;
 import com.example.labsocialnetworkv2.repository.db.MessagesDbRepository;
@@ -18,8 +15,10 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class MainPage extends Application {
-    private UserDbRepository userRepository;
+
+public class UserPage extends Application {
+
+   private UserDbRepository userRepository;
     private MessagesDbRepository msgRepository;
     private FriendRequestDbRepository friendRequestRepository;
     private FriendshipDbRepository friendshipRepository;
@@ -44,12 +43,14 @@ public class MainPage extends Application {
 
     private void initView(Stage primaryStage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(getClass().getResource("main-page.fxml"));
+        fxmlLoader.setLocation(getClass().getResource("user-page.fxml"));
         AnchorPane mainPageLayout = fxmlLoader.load();
-        primaryStage.setTitle("Main");
+        primaryStage.setTitle("User");
         primaryStage.setScene(new Scene(mainPageLayout));
 
-        MainPageController mainPageController = fxmlLoader.getController();
-        mainPageController.setService(service);
+        UserPageController userPageController = fxmlLoader.getController();
+        //userPageController.setService(service);
     }
+
 }
+
