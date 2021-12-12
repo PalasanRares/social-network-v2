@@ -58,9 +58,12 @@ public class FriendshipDbRepository implements Repository<Tuple<User, User>, Fri
     public Friendship findOne(Tuple<User, User> id) {
         Friendship friendship = null;
         try (Connection connection = DriverManager.getConnection(url, username, password);
-             PreparedStatement ps = connection.prepareStatement("SELECT * FROM \"Friendships\" WHERE \"FirstUserId\" = ? AND \"SecondUserId\" = ?")) {
+             PreparedStatement ps = connection.prepareStatement("SELECT * FROM \"Friendships\" WHERE \"FirstUserId\" = ? AND \"SecondUserId\" = ? " +
+                     "OR \"FirstUserId\" = ? AND \"SecondUserId\" = ?")) {
             ps.setInt(1, id.getFirst().getId());
             ps.setInt(2, id.getSecond().getId());
+            ps.setInt(3, id.getSecond().getId());
+            ps.setInt(4, id.getFirst().getId());
             ResultSet resultSet = ps.executeQuery();
             resultSet.next();
             Integer id1 = resultSet.getInt("FirstUserId");

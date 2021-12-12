@@ -17,7 +17,8 @@
           <TableColumn fx:id="tableColumnBirthday" prefWidth="104.0" text="Birthday" />
       </columns>
     </TableView>
-    <Button layoutX="162.0" layoutY="332.0" mnemonicParsing="false" text="Remove" />
+    <Button layoutX="162.0" layoutY="332.0" mnemonicParsing="false" onAction="#handleRemoveButton" text="Remove" />
+    <Button layoutX="430.0" layoutY="188.0" mnemonicParsing="false" text="Add Friend" />
     <Label fx:id="welcomeText" />
     <Button fx:id="loginButton" layoutX="469.0" layoutY="258.0" mnemonicParsing="false" text="Login"  onAction="#onLoginButtonClick" />
    <TextField fx:id="loginTextField" layoutX="418.0" layoutY="219.0" />

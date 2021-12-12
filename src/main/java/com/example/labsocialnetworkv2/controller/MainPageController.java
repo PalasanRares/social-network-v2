@@ -1,6 +1,7 @@
 package com.example.labsocialnetworkv2.controller;
 
 import com.example.labsocialnetworkv2.application.Service;
+import com.example.labsocialnetworkv2.domain.Tuple;
 import com.example.labsocialnetworkv2.domain.User;
 import com.example.labsocialnetworkv2.utils.events.RemoveUserEvent;
 import com.example.labsocialnetworkv2.utils.observer.Observer;
@@ -63,7 +64,8 @@ public class MainPageController implements Observer<RemoveUserEvent> {
     }
 
     private void initModel() {
-        Iterable<User> users = service.findAllUsers();
+        service.loginUser(4);
+        Iterable<User> users = service.findLoggedUsersFriends();
         List<User> userList = StreamSupport.stream(users.spliterator(), false).collect(Collectors.toList());
         model.setAll(userList);
     }
@@ -73,6 +75,11 @@ public class MainPageController implements Observer<RemoveUserEvent> {
         initModel();
     }
 
+    @FXML
+    public void handleRemoveButton(ActionEvent actionEvent) {
+        User selectedUser = tableView.getSelectionModel().getSelectedItem();
+        if (selectedUser != null) {
+            service.removeFriendship(service.getLoggedInUser(), selectedUser);
 
     public void onLoginButtonClick() throws IOException {
         //ia datele din textfield
@@ -91,7 +98,6 @@ public class MainPageController implements Observer<RemoveUserEvent> {
         alert.showAndWait();}
         else{
            //change scene
-
 
 
 
