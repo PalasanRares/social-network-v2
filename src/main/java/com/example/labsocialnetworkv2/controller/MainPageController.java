@@ -1,11 +1,13 @@
 package com.example.labsocialnetworkv2.controller;
 
 import com.example.labsocialnetworkv2.application.Service;
+import com.example.labsocialnetworkv2.domain.Tuple;
 import com.example.labsocialnetworkv2.domain.User;
 import com.example.labsocialnetworkv2.utils.events.RemoveUserEvent;
 import com.example.labsocialnetworkv2.utils.observer.Observer;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -47,7 +49,8 @@ public class MainPageController implements Observer<RemoveUserEvent> {
     }
 
     private void initModel() {
-        Iterable<User> users = service.findAllUsers();
+        service.loginUser(4);
+        Iterable<User> users = service.findLoggedUsersFriends();
         List<User> userList = StreamSupport.stream(users.spliterator(), false).collect(Collectors.toList());
         model.setAll(userList);
     }
@@ -55,5 +58,13 @@ public class MainPageController implements Observer<RemoveUserEvent> {
     @Override
     public void update(RemoveUserEvent event) {
         initModel();
+    }
+
+    @FXML
+    public void handleRemoveButton(ActionEvent actionEvent) {
+        User selectedUser = tableView.getSelectionModel().getSelectedItem();
+        if (selectedUser != null) {
+            service.removeFriendship(service.getLoggedInUser(), selectedUser);
+        }
     }
 }

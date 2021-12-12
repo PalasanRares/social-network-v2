@@ -85,6 +85,14 @@ public class Service implements Observable<RemoveUserEvent> {
         }
     }
 
+    public void removeFriendship(User user1, User user2) {
+        Friendship friendship = new Friendship(new Tuple<>(user1, user2));
+        if (friendshipRepository.findOne(friendship.getId()) != null) {
+            friendshipRepository.remove(friendship.getId());
+        }
+        notifyObservers(new RemoveUserEvent(friendship.getId().getFirst()));
+    }
+
     /**
      * Returns all the friendship connections from the repository
      * @return an iterable object containing all the friendships in repository
@@ -358,5 +366,20 @@ public class Service implements Observable<RemoveUserEvent> {
     @Override
     public void notifyObservers(RemoveUserEvent t) {
         observers.forEach(x -> x.update(t));
+    }
+
+    public Iterable<User> findLoggedUsersFriends() {
+        return StreamSupport.stream(findAllFriendships().spliterator(), false)
+                .filter(friendship -> friendship.getId().getFirst().equals(loggedInUser) || friendship.getId().getSecond().equals(loggedInUser))
+                .map(friendship -> {
+                    if (friendship.getId().getFirst().equals(loggedInUser)) {
+                        return friendship.getId().getSecond();
+                    }
+                    if (friendship.getId().getSecond().equals(loggedInUser)) {
+                        return friendship.getId().getFirst();
+                    }
+                    return null;
+                })
+                .collect(Collectors.toList());
     }
 }
