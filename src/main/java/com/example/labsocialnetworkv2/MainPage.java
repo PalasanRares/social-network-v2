@@ -38,10 +38,6 @@ public class MainPage extends Application {
         primaryStage.show();
     }
 
-    public static void main(String[] args) {
-        launch();
-    }
-
     private void initView(Stage primaryStage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(getClass().getResource("main-page.fxml"));
