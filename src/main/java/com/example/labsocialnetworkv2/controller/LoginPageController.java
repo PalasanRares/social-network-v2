@@ -1,10 +1,8 @@
 package com.example.labsocialnetworkv2.controller;
 
+import com.example.labsocialnetworkv2.MainPage;
 import com.example.labsocialnetworkv2.application.Service;
-import com.example.labsocialnetworkv2.domain.Tuple;
 import com.example.labsocialnetworkv2.domain.User;
-import com.example.labsocialnetworkv2.utils.events.RemoveUserEvent;
-import com.example.labsocialnetworkv2.utils.observer.Observer;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -16,8 +14,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -25,11 +21,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-public class MainPageController implements Observer<RemoveUserEvent> {
+public class LoginPageController {
     private Service service;
 
     ObservableList<User> model = FXCollections.observableArrayList();
 
+    @FXML
+    Button buttonLogin;
+    @FXML
+    TextField textFieldUserId;
     @FXML
     TableView<User> tableView;
     @FXML
@@ -43,7 +43,6 @@ public class MainPageController implements Observer<RemoveUserEvent> {
 
     public void setService(Service service) {
         this.service = service;
-        service.addObserver(this);
         initModel();
     }
 
@@ -57,22 +56,38 @@ public class MainPageController implements Observer<RemoveUserEvent> {
     }
 
     private void initModel() {
-        Iterable<User> users = service.findLoggedUsersFriends();
+        Iterable<User> users = service.findAllUsers();
         List<User> userList = StreamSupport.stream(users.spliterator(), false).collect(Collectors.toList());
         model.setAll(userList);
     }
 
-    @Override
-    public void update(RemoveUserEvent event) {
-        initModel();
-    }
+    public void handleLoginButton(ActionEvent event) {
+        Integer value1 = Integer.valueOf(textFieldUserId.getText());
+        Boolean userExist = service.loginUser(value1);
+        if(!userExist) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Login Error");
+            alert.setContentText("The UserId you tried to logged in with does not exist!");
+            alert.showAndWait();}
+        else {
+            try {
+                FXMLLoader fxmlLoader = new FXMLLoader();
+                fxmlLoader.setLocation(getClass().getClassLoader().getResource("com/example/labsocialnetworkv2/main-page.fxml"));
+                AnchorPane mainPageLayout = fxmlLoader.load();
+                Stage stage = new Stage();
+                stage.setTitle("Main");
+                stage.setScene(new Scene(mainPageLayout));
+                stage.show();
 
-    @FXML
-    public void handleRemoveButton(ActionEvent actionEvent) {
-        User selectedUser = tableView.getSelectionModel().getSelectedItem();
-        if (selectedUser != null) {
-            service.removeFriendship(service.getLoggedInUser(), selectedUser);
-
+                MainPageController mainPageController = fxmlLoader.getController();
+                mainPageController.setService(service);
+                ((Node)(event.getSource())).getScene().getWindow().hide();
+            }
+            catch (IOException ex) {
+                ex.printStackTrace();
+            }
         }
     }
+
 }
