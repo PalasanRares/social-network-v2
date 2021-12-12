@@ -6,6 +6,9 @@ import com.example.labsocialnetworkv2.domain.*;
 import com.example.labsocialnetworkv2.repository.ConvRepository;
 import com.example.labsocialnetworkv2.repository.ModifiableRepository;
 import com.example.labsocialnetworkv2.repository.Repository;
+import com.example.labsocialnetworkv2.utils.events.RemoveUserEvent;
+import com.example.labsocialnetworkv2.utils.observer.Observable;
+import com.example.labsocialnetworkv2.utils.observer.Observer;
 import com.example.labsocialnetworkv2.validator.exception.DuplicateFriendshipException;
 import com.example.labsocialnetworkv2.validator.exception.MessageNotFoundException;
 import com.example.labsocialnetworkv2.validator.exception.UserNotFoundException;
@@ -22,7 +25,7 @@ import java.util.stream.StreamSupport;
 /**
  * Service which manages user and friendship repositories
  */
-public class Service {
+public class Service implements Observable<RemoveUserEvent> {
     private final Repository<Tuple<User, User>, Friendship> friendshipRepository;
     private final Repository<Integer, User> userRepository;
     private final ModifiableRepository<Tuple<User, User>, FriendRequest> friendRequestRepository;
@@ -338,5 +341,22 @@ public class Service {
         catch (RuntimeException ex) {
             System.out.println(ex.getMessage());
         }
+    }
+
+    private List<Observer<RemoveUserEvent>> observers = new ArrayList<>();
+
+    @Override
+    public void addObserver(Observer<RemoveUserEvent> e) {
+        observers.add(e);
+    }
+
+    @Override
+    public void removeObserver(Observer<RemoveUserEvent> e) {
+        observers.remove(e);
+    }
+
+    @Override
+    public void notifyObservers(RemoveUserEvent t) {
+        observers.forEach(x -> x.update(t));
     }
 }
