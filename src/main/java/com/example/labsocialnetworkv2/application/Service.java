@@ -292,7 +292,7 @@ public class Service implements Observable<RemoveUserEvent> {
         return loggedInUser;
     }
 
-    public void sendFriendRequest(Integer friendId) {
+    public boolean sendFriendRequest(Integer friendId) {
         try {
             User friend = userRepository.findOne(friendId);
             if (friend == null) {
@@ -303,9 +303,11 @@ public class Service implements Observable<RemoveUserEvent> {
                 throw new DuplicateFriendshipException("This friend request already exists");
             }
             friendRequestRepository.save(friendRequest);
+            return true;
         }
         catch (RuntimeException ex) {
             System.out.println(ex.getMessage());
+            return false;
         }
     }
 
@@ -385,6 +387,13 @@ public class Service implements Observable<RemoveUserEvent> {
                     }
                     return null;
                 })
+                .collect(Collectors.toList());
+    }
+
+    public Iterable<User> searchByName(String searchedName) {
+        return StreamSupport.stream(findAllUsers().spliterator(), false)
+                .filter(user -> (user.getFirstName().contains(searchedName) || user.getLastName().contains(searchedName)) &&
+                        !user.equals(loggedInUser))
                 .collect(Collectors.toList());
     }
 }

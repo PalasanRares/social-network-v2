@@ -80,13 +80,14 @@ public class MainPageController implements Observer<RemoveUserEvent> {
 
 
     @FXML
-    public void handleRemoveButton(ActionEvent actionEvent) {
+    public void handleRemoveButton() {
         User selectedUser = tableView.getSelectionModel().getSelectedItem();
         if (selectedUser != null) {
             service.removeFriendship(service.getLoggedInUser(), selectedUser);
 
         }
     }
+
 
 
     @FXML
@@ -129,6 +130,26 @@ public class MainPageController implements Observer<RemoveUserEvent> {
 
 
         newWindow.show();
+    }
+
+
+    @FXML
+    public void handleAddFriendButton() {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(getClass().getClassLoader().getResource("com/example/labsocialnetworkv2/search-user-view.fxml"));
+            AnchorPane mainPageLayout = fxmlLoader.load();
+            Stage stage = new Stage();
+            stage.setTitle("Search User");
+            stage.setScene(new Scene(mainPageLayout));
+            stage.show();
+
+            SearchUserController searchUserController = fxmlLoader.getController();
+            searchUserController.setService(service);
+        }
+        catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 
 }
