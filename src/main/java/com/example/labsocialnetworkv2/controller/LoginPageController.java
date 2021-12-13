@@ -1,6 +1,5 @@
 package com.example.labsocialnetworkv2.controller;
 
-import com.example.labsocialnetworkv2.MainPage;
 import com.example.labsocialnetworkv2.application.Service;
 import com.example.labsocialnetworkv2.domain.User;
 import javafx.collections.FXCollections;
@@ -9,7 +8,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -41,6 +39,8 @@ public class LoginPageController {
     @FXML
     TableColumn<User, String> tableColumnBirthday;
 
+
+
     public void setService(Service service) {
         this.service = service;
         initModel();
@@ -62,13 +62,27 @@ public class LoginPageController {
     }
 
     public void handleLoginButton(ActionEvent event) {
-        Integer value1 = Integer.valueOf(textFieldUserId.getText());
+        Integer value1;
+
+        try {
+
+                    value1 = Integer.valueOf(textFieldUserId.getText());
+
+        } catch (NumberFormatException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Login Error");
+            alert.setContentText("You need to give a number!");
+            alert.showAndWait();
+            return ;
+        }
+
         Boolean userExist = service.loginUser(value1);
         if(!userExist) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
             alert.setHeaderText("Login Error");
-            alert.setContentText("The UserId you tried to logged in with does not exist!");
+            alert.setContentText("The UserId you tried to login with does not exist!");
             alert.showAndWait();}
         else {
             try {

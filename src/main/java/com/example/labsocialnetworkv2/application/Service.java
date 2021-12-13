@@ -277,8 +277,11 @@ public class Service implements Observable<RemoveUserEvent> {
     }
 
     public boolean loginUser(Integer userId) {
+        if (userId == null ) {
+            return false;
+        }
         User foundUser = userRepository.findOne(userId);
-        if (foundUser == null) {
+        if (foundUser == null ) {
             return false;
         }
         loggedInUser = foundUser;

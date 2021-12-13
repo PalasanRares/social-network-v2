@@ -22,12 +22,13 @@ public class FriendRequestDbRepository implements ModifiableRepository<Tuple<Use
 
     @Override
     public void save(FriendRequest entity) {
-        String sql = "INSERT INTO friend_requests (\"from\", \"to\", status) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO friend_requests (\"from\", \"to\", status ,\"dataTrimiterii\") VALUES (?, ?, ?, ?)";
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, entity.getId().getFirst().getId());
             ps.setInt(2, entity.getId().getSecond().getId());
             ps.setString(3, entity.getStatus());
+            ps.setDate(4,Date.valueOf(entity.getDataTrimiterii()));
             ps.executeUpdate();
         }
         catch (SQLException ex) {
