@@ -46,7 +46,6 @@ public class MainPageController implements Observer<RemoveUserEvent> {
     TableColumn<User, String> tableColumnBirthday;
 
 
-
     public void setService(Service service) {
         this.service = service;
         service.addObserver(this);
@@ -70,7 +69,6 @@ public class MainPageController implements Observer<RemoveUserEvent> {
         model.setAll(userList);
 
 
-
     }
 
     @Override
@@ -89,14 +87,12 @@ public class MainPageController implements Observer<RemoveUserEvent> {
     }
 
 
-
     @FXML
     protected void handleRequestButton(ActionEvent actionEvent) {
 
         Label secondLabel = new Label("Friend Requests:");
         StackPane secondaryLayout = new StackPane();
         secondaryLayout.getChildren().add(secondLabel);
-
 
 
         TableView tableView = new TableView();
@@ -116,7 +112,7 @@ public class MainPageController implements Observer<RemoveUserEvent> {
         tableView.getColumns().add(column3);
         tableView.getColumns().add(column4);
 
-        for(FriendRequest fr: service.getFriendRequests())
+        for (FriendRequest fr : service.getFriendRequests())
             tableView.getItems().add(fr);
 
 
@@ -146,10 +142,32 @@ public class MainPageController implements Observer<RemoveUserEvent> {
 
             SearchUserController searchUserController = fxmlLoader.getController();
             searchUserController.setService(service);
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             ex.printStackTrace();
         }
+    }
+
+    @FXML
+    public void handleLogoutButton(ActionEvent event) {
+
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(getClass().getClassLoader().getResource("com/example/labsocialnetworkv2/login-page.fxml"));
+            AnchorPane mainPageLayout = fxmlLoader.load();
+            Stage stage = new Stage();
+            stage.setTitle("Login");
+            stage.setScene(new Scene(mainPageLayout));
+            stage.show();
+
+            LoginPageController loginPageController = fxmlLoader.getController();
+            loginPageController.setService(service);
+
+            ((Node) (event.getSource())).getScene().getWindow().hide();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+
     }
 
 }

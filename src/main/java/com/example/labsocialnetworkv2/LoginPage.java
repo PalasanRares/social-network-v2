@@ -34,6 +34,11 @@ public class LoginPage extends Application {
         launch();
     }
 
+    public void setService(Service service) {
+        this.service = service;
+       // initView();
+    }
+
     private void initView(Stage primaryStage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(getClass().getResource("login-page.fxml"));

@@ -19,7 +19,7 @@
           <TableColumn fx:id="tableColumnBirthday" prefWidth="82.0" text="Birthday"/>
       </columns>
     </TableView>
-    <Label layoutX="55.0" layoutY="34.0" prefHeight="55.0" prefWidth="290.0" text="Social Network" textFill="#4566fc">
+    <Label layoutX="55.0" layoutY="34.0" prefHeight="55.0" prefWidth="290.0" text="Social Network" textFill="#7070fc">
         <font>
           <Font name="Chilanka Regular" size="36.0"/>
         </font>
