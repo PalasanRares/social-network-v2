@@ -6,6 +6,9 @@ import com.example.labsocialnetworkv2.domain.*;
 import com.example.labsocialnetworkv2.repository.ConvRepository;
 import com.example.labsocialnetworkv2.repository.ModifiableRepository;
 import com.example.labsocialnetworkv2.repository.Repository;
+import com.example.labsocialnetworkv2.utils.events.RemoveUserEvent;
+import com.example.labsocialnetworkv2.utils.observer.Observable;
+import com.example.labsocialnetworkv2.utils.observer.Observer;
 import com.example.labsocialnetworkv2.validator.exception.DuplicateFriendshipException;
 import com.example.labsocialnetworkv2.validator.exception.MessageNotFoundException;
 import com.example.labsocialnetworkv2.validator.exception.UserNotFoundException;
@@ -22,7 +25,7 @@ import java.util.stream.StreamSupport;
 /**
  * Service which manages user and friendship repositories
  */
-public class Service {
+public class Service implements Observable<RemoveUserEvent> {
     private final Repository<Tuple<User, User>, Friendship> friendshipRepository;
     private final Repository<Integer, User> userRepository;
     private final ModifiableRepository<Tuple<User, User>, FriendRequest> friendRequestRepository;
@@ -80,6 +83,14 @@ public class Service {
         if (friendshipRepository.findOne(id) != null) {
             friendshipRepository.remove(id);
         }
+    }
+
+    public void removeFriendship(User user1, User user2) {
+        Friendship friendship = new Friendship(new Tuple<>(user1, user2));
+        if (friendshipRepository.findOne(friendship.getId()) != null) {
+            friendshipRepository.remove(friendship.getId());
+        }
+        notifyObservers(new RemoveUserEvent(friendship.getId().getFirst()));
     }
 
     /**
@@ -179,7 +190,7 @@ public class Service {
                         //update reply sa fie null pt ca nu mai exista mesajul
                             Message ms= new Message(null,null,m.getMessage(),null,null);
                             ms.setId(m.getId());
-                            messageRepository.modify(ms);
+                            messageRepository.modify(ms,false);
                     }
                 }
             }
@@ -189,19 +200,21 @@ public class Service {
         }
 
     }
-    public void modifyMessage(Integer id,String msg,Integer reply){
+    public void modifyMessage(Integer id,String msg,Integer reply,Boolean all){
         if(id == null)throw new NullPointerException("id must not be null");
         Message m = messageRepository.findOne(id);
         if(m == null)throw new MessageNotFoundException("message not found");
         try {
             Message ms= new Message(null,null,msg,null,messageRepository.findOne(reply));
             ms.setId(id);
-            messageRepository.modify(ms);
+
+            messageRepository.modify(ms,all);
 
         } catch (RuntimeException ex) {
             System.out.println(ex.getMessage());
         }
     }
+
     public void removeUser(String id) {
         try {
             User user = userRepository.findOne(Integer.parseInt(id));
@@ -264,8 +277,11 @@ public class Service {
     }
 
     public boolean loginUser(Integer userId) {
+        if (userId == null ) {
+            return false;
+        }
         User foundUser = userRepository.findOne(userId);
-        if (foundUser == null) {
+        if (foundUser == null ) {
             return false;
         }
         loggedInUser = foundUser;
@@ -276,7 +292,7 @@ public class Service {
         return loggedInUser;
     }
 
-    public void sendFriendRequest(Integer friendId) {
+    public boolean sendFriendRequest(Integer friendId) {
         try {
             User friend = userRepository.findOne(friendId);
             if (friend == null) {
@@ -287,9 +303,11 @@ public class Service {
                 throw new DuplicateFriendshipException("This friend request already exists");
             }
             friendRequestRepository.save(friendRequest);
+            return true;
         }
         catch (RuntimeException ex) {
             System.out.println(ex.getMessage());
+            return false;
         }
     }
 
@@ -338,5 +356,44 @@ public class Service {
         catch (RuntimeException ex) {
             System.out.println(ex.getMessage());
         }
+    }
+
+    private List<Observer<RemoveUserEvent>> observers = new ArrayList<>();
+
+    @Override
+    public void addObserver(Observer<RemoveUserEvent> e) {
+        observers.add(e);
+    }
+
+    @Override
+    public void removeObserver(Observer<RemoveUserEvent> e) {
+        observers.remove(e);
+    }
+
+    @Override
+    public void notifyObservers(RemoveUserEvent t) {
+        observers.forEach(x -> x.update(t));
+    }
+
+    public Iterable<User> findLoggedUsersFriends() {
+        return StreamSupport.stream(findAllFriendships().spliterator(), false)
+                .filter(friendship -> friendship.getId().getFirst().equals(loggedInUser) || friendship.getId().getSecond().equals(loggedInUser))
+                .map(friendship -> {
+                    if (friendship.getId().getFirst().equals(loggedInUser)) {
+                        return friendship.getId().getSecond();
+                    }
+                    if (friendship.getId().getSecond().equals(loggedInUser)) {
+                        return friendship.getId().getFirst();
+                    }
+                    return null;
+                })
+                .collect(Collectors.toList());
+    }
+
+    public Iterable<User> searchByName(String searchedName) {
+        return StreamSupport.stream(findAllUsers().spliterator(), false)
+                .filter(user -> (user.getFirstName().contains(searchedName) || user.getLastName().contains(searchedName)) &&
+                        !user.equals(loggedInUser))
+                .collect(Collectors.toList());
     }
 }
