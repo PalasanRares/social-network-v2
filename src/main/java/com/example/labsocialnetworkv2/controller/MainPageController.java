@@ -23,6 +23,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 import java.io.IOException;
 import java.util.List;
@@ -168,6 +169,72 @@ public class MainPageController implements Observer<RemoveUserEvent> {
         }
 
 
+    }
+
+    @FXML
+    public void handleSentFriendRequestsButton() {
+        TableView<FriendRequest> tableView = new TableView<>();
+
+        TableColumn<FriendRequest, String> toColumn = new TableColumn<>("To");
+        toColumn.setCellValueFactory(new PropertyValueFactory<>("toId"));
+
+        TableColumn<FriendRequest, String> statusColumn = new TableColumn<>("Status");
+        statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
+
+        TableColumn<FriendRequest, String> dateColumn = new TableColumn<>("Date");
+        dateColumn.setCellValueFactory(new PropertyValueFactory<>("dataTrimiterii"));
+
+        TableColumn<FriendRequest, String> deleteRequestColumn = new TableColumn<>("Delete Request");
+
+        Callback<TableColumn<FriendRequest, String>, TableCell<FriendRequest, String>> deleteRequestFactory = new Callback<>() {
+            @Override
+            public TableCell<FriendRequest, String> call(TableColumn<FriendRequest, String> param) {
+                final TableCell<FriendRequest, String> cell = new TableCell<>() {
+                    final Button btn = new Button("Delete Request");
+
+                    @Override
+                    public void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                            setText(null);
+                        } else {
+                            btn.setOnAction(event -> {
+                                FriendRequest friendRequest = getTableView().getItems().get(getIndex());
+                                service.removeFriendRequest(friendRequest);
+                                ObservableList<FriendRequest> tableModel = FXCollections.observableArrayList();
+                                Iterable<FriendRequest> friendRequests = service.getSentFriendRequests();
+                                List<FriendRequest> friendRequestList = StreamSupport.stream(friendRequests.spliterator(), false).collect(Collectors.toList());
+                                tableModel.setAll(friendRequestList);
+                                tableView.setItems(tableModel);
+                            });
+                            setGraphic(btn);
+                            setText(null);
+                        }
+                    }
+                };
+                return cell;
+            }
+        };
+
+        deleteRequestColumn.setCellFactory(deleteRequestFactory);
+
+        tableView.getColumns().addAll(toColumn, statusColumn, dateColumn, deleteRequestColumn);
+
+        ObservableList<FriendRequest> tableModel = FXCollections.observableArrayList();
+        Iterable<FriendRequest> friendRequests = service.getSentFriendRequests();
+        List<FriendRequest> friendRequestList = StreamSupport.stream(friendRequests.spliterator(), false).collect(Collectors.toList());
+        tableModel.setAll(friendRequestList);
+        tableView.setItems(tableModel);
+
+        VBox vbox = new VBox(tableView);
+        Scene secondScene = new Scene(vbox, 400, 300);
+
+        Stage newWindow = new Stage();
+        newWindow.setTitle("Manage Friend Requests");
+        newWindow.setScene(secondScene);
+
+        newWindow.show();
     }
 
 }

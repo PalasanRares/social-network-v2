@@ -79,9 +79,16 @@ public class Service implements Observable<RemoveUserEvent> {
     public void removeFriendship(String id1, String id2) {
         User user1 = userRepository.findOne(Integer.parseInt(id1));
         User user2 = userRepository.findOne(Integer.parseInt(id2));
-        Tuple<User, User> id = new Tuple<>(user1, user2);
-        if (friendshipRepository.findOne(id) != null) {
-            friendshipRepository.remove(id);
+        Tuple<User, User> firstId = new Tuple<>(user1, user2);
+        Tuple<User, User> secondId = new Tuple<>(user2, user1);
+        if (friendshipRepository.findOne(firstId) != null) {
+            friendshipRepository.remove(firstId);
+            if (friendRequestRepository.findOne(firstId) != null) {
+                friendRequestRepository.remove(firstId);
+            }
+            else if (friendRequestRepository.findOne(secondId) != null) {
+                friendRequestRepository.remove(secondId);
+            }
         }
     }
 
@@ -89,6 +96,9 @@ public class Service implements Observable<RemoveUserEvent> {
         Friendship friendship = new Friendship(new Tuple<>(user1, user2));
         if (friendshipRepository.findOne(friendship.getId()) != null) {
             friendshipRepository.remove(friendship.getId());
+            if (friendRequestRepository.findOne(friendship.getId()) != null) {
+                friendRequestRepository.remove(friendship.getId());
+            }
         }
         notifyObservers(new RemoveUserEvent(friendship.getId().getFirst()));
     }
@@ -302,6 +312,10 @@ public class Service implements Observable<RemoveUserEvent> {
             if (friendRequestRepository.findOne(friendRequest.getId()) != null) {
                 throw new DuplicateFriendshipException("This friend request already exists");
             }
+            FriendRequest friendRequest1 = new FriendRequest(new Tuple<>(friend, loggedInUser), "pending");
+            if (friendRequestRepository.findOne(friendRequest1.getId()) != null) {
+                throw new DuplicateFriendshipException("This friend request already exists");
+            }
             friendRequestRepository.save(friendRequest);
             return true;
         }
@@ -313,6 +327,12 @@ public class Service implements Observable<RemoveUserEvent> {
 
     public Iterable<FriendRequest> getFriendRequests() {
         return friendRequestRepository.findAllForId(new Tuple<>(new User(), loggedInUser));
+    }
+
+    public Iterable<FriendRequest> getSentFriendRequests() {
+        return StreamSupport.stream(friendRequestRepository.findAll().spliterator(), false)
+                .filter(friendRequest -> friendRequest.getId().getFirst().equals(loggedInUser) && friendRequest.getStatus().equals("pending"))
+                .collect(Collectors.toList());
     }
 
     public void acceptFriendRequest(Integer from) {
@@ -335,6 +355,12 @@ public class Service implements Observable<RemoveUserEvent> {
         }
         catch (RuntimeException ex) {
             System.out.println(ex.getMessage());
+        }
+    }
+
+    public void removeFriendRequest(FriendRequest friendRequest) {
+        if (friendRequestRepository.findOne(friendRequest.getId()) != null) {
+            friendRequestRepository.remove(friendRequest.getId());
         }
     }
 

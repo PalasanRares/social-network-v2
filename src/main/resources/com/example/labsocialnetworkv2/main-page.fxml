@@ -21,5 +21,6 @@
 
     <Button layoutX="430.0" layoutY="188.0" mnemonicParsing="false" onAction="#handleAddFriendButton" text="Add Friend" />
    <Button layoutX="430.0" layoutY="332.0" mnemonicParsing="false" onAction="#handleLogoutButton" text="Logout" />
+   <Button layoutX="397.0" layoutY="288.0" mnemonicParsing="false" onAction="#handleSentFriendRequestsButton" text="Sent Friend Requests" />
 
 </AnchorPane>
