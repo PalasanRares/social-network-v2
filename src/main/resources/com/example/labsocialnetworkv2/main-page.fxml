@@ -5,7 +5,7 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane fx:id="anp" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.labsocialnetworkv2.controller.MainPageController">
+<AnchorPane fx:id="anp" prefHeight="400.0" prefWidth="703.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.labsocialnetworkv2.controller.MainPageController">
     <TableView fx:id="tableView" layoutX="14.0" layoutY="100.0" prefHeight="200.0" prefWidth="373.0">
       <columns>
           <TableColumn fx:id="tableColumnUserId" prefWidth="75.0" text="User Id" />
@@ -14,12 +14,12 @@
           <TableColumn fx:id="tableColumnBirthday" prefWidth="104.0" text="Birthday" />
       </columns>
     </TableView>
-    <Button layoutX="162.0" layoutY="332.0" mnemonicParsing="false" onAction="#handleRemoveButton" text="Remove" />
+    <Button layoutX="544.0" layoutY="300.0" mnemonicParsing="false" onAction="#handleRemoveButton" text="Remove" />
 
 
-   <Button layoutX="413.0" layoutY="246.0" mnemonicParsing="false" onAction="#handleRequestButton" text="Friend Requests" />
+   <Button layoutX="524.0" layoutY="174.0" mnemonicParsing="false" onAction="#handleRequestButton" text="Friend Requests" />
 
-    <Button layoutX="430.0" layoutY="188.0" mnemonicParsing="false" onAction="#handleAddFriendButton" text="Add Friend" />
-   <Button layoutX="430.0" layoutY="332.0" mnemonicParsing="false" onAction="#handleLogoutButton" text="Logout" />
+    <Button layoutX="537.0" layoutY="122.0" mnemonicParsing="false" onAction="#handleAddFriendButton" text="Add Friend" />
+   <Button layoutX="547.0" layoutY="237.0" mnemonicParsing="false" onAction="#handleLogoutButton" text="Logout" />
 
 </AnchorPane>

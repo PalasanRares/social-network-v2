@@ -154,6 +154,25 @@ public class MessagesDbRepository implements ConvRepository<Integer, Message> {
         return user;
 
     }
+    public Integer getMostRecentMessage(){
+        Integer id=0;
+        try (Connection connection = DriverManager.getConnection(url, username, password);
+             PreparedStatement ps = connection.prepareStatement("SELECT \"Id\" FROM \"Messages\" ORDER BY \"Id\" DESC LIMIT 1")) {
+
+
+            ResultSet resultSet = ps.executeQuery();
+
+            while (resultSet.next()) {
+               id = resultSet.getInt("Id");
+                return id;
+
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return id;
+    }
     public List<User> getReceiversList(Integer id){
         List<User> rez =new ArrayList<>();
 

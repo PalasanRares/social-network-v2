@@ -162,6 +162,7 @@ public class Service implements Observable<RemoveUserEvent> {
         Message msg = new Message(sender,list,args[i],LocalDate.now(),null);
         messageRepository.save(msg);
     }
+    public Integer getLastMessage(){ return messageRepository.getMostRecentMessage();}
     public  Iterable<Message> Conversatie(Integer u1,Integer u2){
         if(u1 == null || u2 == null)throw new NullPointerException("id must not be null");
         User user1 = userRepository.findOne(u1);
