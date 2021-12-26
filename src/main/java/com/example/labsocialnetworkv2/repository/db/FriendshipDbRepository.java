@@ -3,6 +3,7 @@ package com.example.labsocialnetworkv2.repository.db;
 import com.example.labsocialnetworkv2.domain.Friendship;
 import com.example.labsocialnetworkv2.domain.Tuple;
 import com.example.labsocialnetworkv2.domain.User;
+import com.example.labsocialnetworkv2.repository.PaginatedRepository;
 import com.example.labsocialnetworkv2.repository.Repository;
 import com.example.labsocialnetworkv2.validator.FriendshipValidator;
 import com.example.labsocialnetworkv2.validator.Validator;
@@ -12,7 +13,7 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
-public class FriendshipDbRepository implements Repository<Tuple<User, User>, Friendship> {
+public class FriendshipDbRepository implements PaginatedRepository<Tuple<User, User>, Friendship> {
     private final String url;
     private final String username;
     private final String password;
@@ -94,6 +95,47 @@ public class FriendshipDbRepository implements Repository<Tuple<User, User>, Fri
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement statement = connection.prepareStatement("SELECT * FROM \"Friendships\"");
              ResultSet resultSet = statement.executeQuery()) {
+            while (resultSet.next()) {
+                Integer id1 = resultSet.getInt("FirstUserId");
+                Integer id2 = resultSet.getInt("SecondUserId");
+                LocalDate friendshipDate = resultSet.getDate("FriendshipDate").toLocalDate();
+
+                PreparedStatement psUsers = connection.prepareStatement("SELECT * FROM \"Users\" WHERE \"UserId\" = ? OR \"UserId\" = ?");
+                psUsers.setInt(1, id1);
+                psUsers.setInt(2, id2);
+                ResultSet users = psUsers.executeQuery();
+                users.next();
+                User user1 = new User(users.getString("FirstName"), users.getString("LastName"), users.getDate("Birthday").toLocalDate());
+                user1.setId(users.getInt("UserId"));
+                users.next();
+                User user2 = new User(users.getString("FirstName"), users.getString("LastName"), users.getDate("Birthday").toLocalDate());
+                user2.setId(users.getInt("UserId"));
+
+                Friendship friendship = new Friendship(new Tuple<>(user1, user2), friendshipDate);
+                friendships.add(friendship);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return friendships;
+    }
+
+    @Override
+    public Iterable<Friendship> findAllPage(int pageNumber, int rowsOnPage, Integer userId) {
+        String sql = "SELECT * FROM \"Friendships\" " +
+                "WHERE \"FirstUserId\" = ? OR \"SecondUserId\" = ? " +
+                "ORDER BY \"FriendshipDate\" " +
+                "OFFSET (? * ?) ROWS " +
+                "FETCH NEXT ? ROWS ONLY";
+        Set<Friendship> friendships = new HashSet<>();
+        try (Connection connection = DriverManager.getConnection(url, username, password);
+             PreparedStatement statement = connection.prepareStatement(sql);) {
+            statement.setInt(1, userId);
+            statement.setInt(2, userId);
+            statement.setInt(3, pageNumber);
+            statement.setInt(4, rowsOnPage);
+            statement.setInt(5, rowsOnPage);
+            ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 Integer id1 = resultSet.getInt("FirstUserId");
                 Integer id2 = resultSet.getInt("SecondUserId");

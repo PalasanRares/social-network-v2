@@ -1,19 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.Pagination?>
 <?import javafx.scene.layout.AnchorPane?>
 
 <AnchorPane fx:id="anp" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.labsocialnetworkv2.controller.MainPageController">
-    <TableView fx:id="tableView" layoutX="14.0" layoutY="100.0" prefHeight="200.0" prefWidth="373.0">
-      <columns>
-          <TableColumn fx:id="tableColumnUserId" prefWidth="75.0" text="User Id" />
-          <TableColumn fx:id="tableColumnFirstName" prefWidth="102.0" text="First Name" />
-          <TableColumn fx:id="tableColumnLastName" prefWidth="91.0" text="Last Name" />
-          <TableColumn fx:id="tableColumnBirthday" prefWidth="104.0" text="Birthday" />
-      </columns>
-    </TableView>
     <Button layoutX="162.0" layoutY="332.0" mnemonicParsing="false" onAction="#handleRemoveButton" text="Remove" />
 
 
@@ -22,5 +13,6 @@
     <Button layoutX="430.0" layoutY="188.0" mnemonicParsing="false" onAction="#handleAddFriendButton" text="Add Friend" />
    <Button layoutX="430.0" layoutY="332.0" mnemonicParsing="false" onAction="#handleLogoutButton" text="Logout" />
    <Button layoutX="397.0" layoutY="288.0" mnemonicParsing="false" onAction="#handleSentFriendRequestsButton" text="Sent Friend Requests" />
+   <Pagination fx:id="friendshipTablePagination" layoutX="17.0" layoutY="75.0" prefHeight="244.0" prefWidth="372.0" />
 
 </AnchorPane>

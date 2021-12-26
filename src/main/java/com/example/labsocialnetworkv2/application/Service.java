@@ -5,6 +5,7 @@ import com.example.labsocialnetworkv2.constants.Sortbydate;
 import com.example.labsocialnetworkv2.domain.*;
 import com.example.labsocialnetworkv2.repository.ConvRepository;
 import com.example.labsocialnetworkv2.repository.ModifiableRepository;
+import com.example.labsocialnetworkv2.repository.PaginatedRepository;
 import com.example.labsocialnetworkv2.repository.Repository;
 import com.example.labsocialnetworkv2.utils.events.RemoveUserEvent;
 import com.example.labsocialnetworkv2.utils.observer.Observable;
@@ -26,7 +27,7 @@ import java.util.stream.StreamSupport;
  * Service which manages user and friendship repositories
  */
 public class Service implements Observable<RemoveUserEvent> {
-    private final Repository<Tuple<User, User>, Friendship> friendshipRepository;
+    private final PaginatedRepository<Tuple<User, User>, Friendship> friendshipRepository;
     private final Repository<Integer, User> userRepository;
     private final ModifiableRepository<Tuple<User, User>, FriendRequest> friendRequestRepository;
     private User loggedInUser;
@@ -37,12 +38,26 @@ public class Service implements Observable<RemoveUserEvent> {
      * @param userRepository userRepository to be used
      * @param messageRepository messageRepository to be used
      */
-    public Service(Repository<Tuple<User, User>, Friendship> friendshipRepository, Repository<Integer, User> userRepository, ConvRepository<Integer, Message> messageRepository, ModifiableRepository<Tuple<User, User>, FriendRequest> friendRequestRepository) {
+    public Service(PaginatedRepository<Tuple<User, User>, Friendship> friendshipRepository, Repository<Integer, User> userRepository, ConvRepository<Integer, Message> messageRepository, ModifiableRepository<Tuple<User, User>, FriendRequest> friendRequestRepository) {
         this.friendshipRepository = friendshipRepository;
         this.userRepository = userRepository;
         this.messageRepository = messageRepository;
         this.friendRequestRepository = friendRequestRepository;
         loggedInUser = null;
+    }
+
+    public Iterable<User> getFriendshipsPage(int pageNumber, int rowsOnPage) {
+        return StreamSupport.stream(friendshipRepository.findAllPage(pageNumber, rowsOnPage, loggedInUser.getId()).spliterator(), false)
+                .map(friendship -> {
+                    if (friendship.getId().getFirst().equals(loggedInUser)) {
+                        return friendship.getId().getSecond();
+                    }
+                    if (friendship.getId().getSecond().equals(loggedInUser)) {
+                        return friendship.getId().getFirst();
+                    }
+                    return null;
+                })
+                .collect(Collectors.toList());
     }
 
     /**
