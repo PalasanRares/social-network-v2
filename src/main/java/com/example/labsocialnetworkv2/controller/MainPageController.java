@@ -68,7 +68,7 @@ public class MainPageController implements Observer<RemoveUserEvent> {
 
     @Override
     public void update(RemoveUserEvent event) {
-        return;
+        initModel(friendshipTablePagination.getCurrentPageIndex());
     }
 
 
@@ -230,11 +230,15 @@ public class MainPageController implements Observer<RemoveUserEvent> {
         newWindow.show();
     }
 
-    private Node createPage(int pageIndex) {
+    void initModel(int pageIndex) {
         Iterable<User> friendshipsOnPage = service.getFriendshipsPage(pageIndex, 7);
         List<User> friendshipsOnePageList = StreamSupport.stream(friendshipsOnPage.spliterator(), false).collect(Collectors.toList());
 
         tableView.setItems(FXCollections.observableArrayList(friendshipsOnePageList));
+    }
+
+    private Node createPage(int pageIndex) {
+        initModel(pageIndex);
         return new BorderPane(tableView);
 
     }
