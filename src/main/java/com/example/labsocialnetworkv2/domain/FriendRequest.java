@@ -12,6 +12,12 @@ public class FriendRequest extends Entity<Tuple<User, User>> {
         this.dataTrimiterii = LocalDate.now();
     }
 
+    public FriendRequest(Tuple<User, User> id, String status, LocalDate dataTrimiterii) {
+        super(id);
+        this.status = status;
+        this.dataTrimiterii = dataTrimiterii;
+    }
+
     public String getStatus() {
         return status;
     }
@@ -23,6 +29,10 @@ public class FriendRequest extends Entity<Tuple<User, User>> {
     @Override
     public String toString() {
         return "From: " + id.getFirst() + " | To: " + id.getSecond() + " | Status: " + status + " | Data: " +dataTrimiterii;
+    }
+
+    public User getToId() {
+        return id.getSecond();
     }
 
     @Override

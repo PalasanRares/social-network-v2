@@ -19,7 +19,9 @@
 
    <Button layoutX="524.0" layoutY="174.0" mnemonicParsing="false" onAction="#handleRequestButton" text="Friend Requests" />
 
-    <Button layoutX="537.0" layoutY="122.0" mnemonicParsing="false" onAction="#handleAddFriendButton" text="Add Friend" />
-   <Button layoutX="547.0" layoutY="237.0" mnemonicParsing="false" onAction="#handleLogoutButton" text="Logout" />
+    <Button layoutX="430.0" layoutY="188.0" mnemonicParsing="false" onAction="#handleAddFriendButton" text="Add Friend" />
+   <Button layoutX="430.0" layoutY="332.0" mnemonicParsing="false" onAction="#handleLogoutButton" text="Logout" />
+   <Button layoutX="397.0" layoutY="288.0" mnemonicParsing="false" onAction="#handleSentFriendRequestsButton" text="Sent Friend Requests" />
+
 
 </AnchorPane>
