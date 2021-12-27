@@ -22,7 +22,6 @@ import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -48,6 +47,64 @@ public class MainPageController implements Observer<RemoveUserEvent> {
 
         TableColumn<User, Integer> columnId = new TableColumn<>("User Id");
         columnId.setCellValueFactory(new PropertyValueFactory<>("id"));
+        ///---
+        addButtonToTable();
+    }
+  
+    private void addButtonToTable() {
+        TableColumn<User, Void> colBtn = new TableColumn("");
+
+        Callback<TableColumn<User, Void>, TableCell<User, Void>> cellFactory = new Callback<TableColumn<User, Void>, TableCell<User, Void>>() {
+            @Override
+            public TableCell<User, Void> call(final TableColumn<User, Void> param) {
+                final TableCell<User, Void> cell = new TableCell<User, Void>() {
+
+                    private final Button btn = new Button("Message");
+
+                    {
+                        btn.setOnAction((ActionEvent event) -> {
+                            User data = getTableView().getItems().get(getIndex());
+                            System.out.println("selectedData: " + data);
+                            ///aici pagina noua
+                            try {
+                                FXMLLoader fxmlLoader = new FXMLLoader();
+                                fxmlLoader.setLocation(getClass().getClassLoader().getResource("com/example/labsocialnetworkv2/message-page.fxml"));
+                                AnchorPane msgPageLayout = fxmlLoader.load();
+                                Stage stage = new Stage();
+                                stage.setTitle("Message");
+                                stage.setScene(new Scene(msgPageLayout));
+                                stage.show();
+
+                                MessagePageController msgPageController = fxmlLoader.getController();
+                                msgPageController.setService(service,data);
+
+                                ((Node) (event.getSource())).getScene().getWindow().hide();
+                            } catch (IOException ex) {
+                                ex.printStackTrace();
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void updateItem(Void item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                        } else {
+                            setGraphic(btn);
+                        }
+                    }
+                };
+                return cell;
+            }
+        };
+
+        colBtn.setCellFactory(cellFactory);
+
+        tableView.setPrefWidth(450);
+        tableView.setPrefHeight(200);
+
+        tableView.getColumns().add(colBtn);
 
         TableColumn<User, String> columnFirstName = new TableColumn<>("First Name");
         columnFirstName.setCellValueFactory(new PropertyValueFactory<>("firstName"));
