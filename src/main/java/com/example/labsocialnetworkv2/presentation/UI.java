@@ -143,8 +143,8 @@ public class UI {
 
     }
 
-    private void uiLogin(String userId) {
-        if (!service.loginUser(Integer.parseInt(userId))) {
+    private void uiLogin(String username,String password) {
+        if (!service.loginUser(username,password)) {
             System.out.println("Ups, something went wrong with logging you in");
         }
         else {
@@ -199,7 +199,7 @@ public class UI {
                 case "largest" -> largestUI();
                 case "friendships" -> showFriendships(args[1]);
                 case "friendshipsMonth" -> rel2UI(args[1],args[2]);
-                case "login" -> uiLogin(args[1]);
+                case "login" -> uiLogin(args[1],args[2]);
                 case "sendRequest" -> uiSendFriendRequest(args[1]);
                 case "seeRequests" -> uiSeeFriendRequests();
                 case "acceptRequest" -> uiAcceptRequest(args[1]);

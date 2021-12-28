@@ -1,34 +1,31 @@
 package com.example.labsocialnetworkv2.controller;
 
 import com.example.labsocialnetworkv2.application.Service;
-import com.example.labsocialnetworkv2.domain.User;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 public class LoginPageController {
     private Service service;
 
-    ObservableList<User> model = FXCollections.observableArrayList();
+    //ObservableList<User> model = FXCollections.observableArrayList();
 
     @FXML
     Button buttonLogin;
     @FXML
-    TextField textFieldUserId;
+    TextField textFieldUsername;
     @FXML
+    PasswordField textFieldPassword;
+    @FXML
+    private Hyperlink signUp;
+   /* @FXML
     TableView<User> tableView;
     @FXML
     TableColumn<User, String> tableColumnUserId;
@@ -37,7 +34,7 @@ public class LoginPageController {
     @FXML
     TableColumn<User, String> tableColumnLastName;
     @FXML
-    TableColumn<User, String> tableColumnBirthday;
+    TableColumn<User, String> tableColumnBirthday;*/
 
 
 
@@ -48,41 +45,45 @@ public class LoginPageController {
 
     @FXML
     public void initialize() {
-        tableColumnUserId.setCellValueFactory(new PropertyValueFactory<>("id"));
+      /*  tableColumnUserId.setCellValueFactory(new PropertyValueFactory<>("id"));
         tableColumnFirstName.setCellValueFactory(new PropertyValueFactory<>("firstName"));
         tableColumnLastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
         tableColumnBirthday.setCellValueFactory(new PropertyValueFactory<>("birthday"));
-        tableView.setItems(model);
+        tableView.setItems(model);*/
     }
 
     private void initModel() {
-        Iterable<User> users = service.findAllUsers();
+        /*Iterable<User> users = service.findAllUsers();
         List<User> userList = StreamSupport.stream(users.spliterator(), false).collect(Collectors.toList());
-        model.setAll(userList);
+        model.setAll(userList);*/
     }
 
     public void handleLoginButton(ActionEvent event) {
-        Integer value1;
-
+        String use;
+        String pass;
         try {
 
-                    value1 = Integer.valueOf(textFieldUserId.getText());
-
-        } catch (NumberFormatException e) {
+                    use = textFieldUsername.getText();
+                    pass = textFieldPassword.getText();
+                    if(use == "" || pass == "")
+                        throw new Exception("smh");
+        } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
             alert.setHeaderText("Login Error");
-            alert.setContentText("You need to give a number!");
+            alert.setContentText("You need to give something!");
             alert.showAndWait();
             return ;
         }
 
-        Boolean userExist = service.loginUser(value1);
+
+            Boolean userExist = service.loginUser(use, pass);
+
         if(!userExist) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
             alert.setHeaderText("Login Error");
-            alert.setContentText("The UserId you tried to login with does not exist!");
+            alert.setContentText("The User does not exist!WRONG USERNAME AND/OR PASSWORD");
             alert.showAndWait();}
         else {
             try {
@@ -103,5 +104,23 @@ public class LoginPageController {
             }
         }
     }
+    @FXML
+    public void goSignUp(ActionEvent mouseEvent) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(getClass().getClassLoader().getResource("com/example/labsocialnetworkv2/signUp-page.fxml"));
+            AnchorPane mainPageLayout = fxmlLoader.load();
+            Stage stage = new Stage();
+            stage.setTitle("SignUp");
+            stage.setScene(new Scene(mainPageLayout));
+            stage.show();
 
+            SignUpPageController mainPageController = fxmlLoader.getController();
+            mainPageController.setService(service);
+            ((Node)(mouseEvent.getSource())).getScene().getWindow().hide();
+        }
+        catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
 }

@@ -75,10 +75,10 @@ public class FriendshipDbRepository implements Repository<Tuple<User, User>, Fri
             psUsers.setInt(2, id2);
             ResultSet users = psUsers.executeQuery();
             users.next();
-            User user1 = new User(users.getString("FirstName"), users.getString("LastName"), users.getDate("Birthday").toLocalDate());
+            User user1 = new User(users.getString("username"),users.getString("password"),users.getString("FirstName"), users.getString("LastName"), users.getDate("Birthday").toLocalDate());
             user1.setId(users.getInt("UserId"));
             users.next();
-            User user2 = new User(users.getString("FirstName"), users.getString("LastName"), users.getDate("Birthday").toLocalDate());
+            User user2 = new User(users.getString("username"),users.getString("password"),users.getString("FirstName"), users.getString("LastName"), users.getDate("Birthday").toLocalDate());
             user2.setId(users.getInt("UserId"));
 
             friendship = new Friendship(new Tuple<>(user1, user2), friendshipDate);
@@ -104,10 +104,10 @@ public class FriendshipDbRepository implements Repository<Tuple<User, User>, Fri
                 psUsers.setInt(2, id2);
                 ResultSet users = psUsers.executeQuery();
                 users.next();
-                User user1 = new User(users.getString("FirstName"), users.getString("LastName"), users.getDate("Birthday").toLocalDate());
+                User user1 = new User(users.getString("username"),users.getString("password"),users.getString("FirstName"), users.getString("LastName"), users.getDate("Birthday").toLocalDate());
                 user1.setId(users.getInt("UserId"));
                 users.next();
-                User user2 = new User(users.getString("FirstName"), users.getString("LastName"), users.getDate("Birthday").toLocalDate());
+                User user2 = new User(users.getString("username"),users.getString("password"),users.getString("FirstName"), users.getString("LastName"), users.getDate("Birthday").toLocalDate());
                 user2.setId(users.getInt("UserId"));
 
                 Friendship friendship = new Friendship(new Tuple<>(user1, user2), friendshipDate);
