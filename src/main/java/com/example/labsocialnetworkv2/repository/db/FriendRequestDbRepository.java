@@ -71,10 +71,10 @@ public class FriendRequestDbRepository implements ModifiableRepository<Tuple<Use
                 psUsers.setInt(2, id2);
                 ResultSet users = psUsers.executeQuery();
                 users.next();
-                User user1 = new User(users.getString("FirstName"), users.getString("LastName"), users.getDate("Birthday").toLocalDate());
+                User user1 = new User(users.getString("username"),users.getString("password"),users.getString("FirstName"), users.getString("LastName"), users.getDate("Birthday").toLocalDate());
                 user1.setId(users.getInt("UserId"));
                 users.next();
-                User user2 = new User(users.getString("FirstName"), users.getString("LastName"), users.getDate("Birthday").toLocalDate());
+                User user2 = new User(users.getString("username"),users.getString("password"),users.getString("FirstName"), users.getString("LastName"), users.getDate("Birthday").toLocalDate());
                 user2.setId(users.getInt("UserId"));
 
                 request = new FriendRequest(new Tuple<>(user1, user2), status);
@@ -143,11 +143,11 @@ public class FriendRequestDbRepository implements ModifiableRepository<Tuple<Use
                 User user2 = new User();
                 while (users.next()) {
                     if (users.getInt("UserId") == from) {
-                        user1 = new User(users.getString("FirstName"), users.getString("LastName"), users.getDate("Birthday").toLocalDate());
+                        user1 = new User(users.getString("username"),users.getString("password"),users.getString("FirstName"), users.getString("LastName"), users.getDate("Birthday").toLocalDate());
                         user1.setId(from);
                     }
                     if (users.getInt("UserId") == to) {
-                        user2 = new User(users.getString("FirstName"), users.getString("LastName"), users.getDate("Birthday").toLocalDate());
+                        user2 = new User(users.getString("username"),users.getString("password"),users.getString("FirstName"), users.getString("LastName"), users.getDate("Birthday").toLocalDate());
                         user2.setId(to);
                     }
                 }

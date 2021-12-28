@@ -7,6 +7,7 @@ import com.example.labsocialnetworkv2.repository.ConvRepository;
 import com.example.labsocialnetworkv2.repository.ModifiableRepository;
 import com.example.labsocialnetworkv2.repository.PaginatedRepository;
 import com.example.labsocialnetworkv2.repository.Repository;
+import com.example.labsocialnetworkv2.repository.UsernameRepository;
 import com.example.labsocialnetworkv2.utils.events.RemoveUserEvent;
 import com.example.labsocialnetworkv2.utils.observer.Observable;
 import com.example.labsocialnetworkv2.utils.observer.Observer;
@@ -27,8 +28,13 @@ import java.util.stream.StreamSupport;
  * Service which manages user and friendship repositories
  */
 public class Service implements Observable<RemoveUserEvent> {
+
+    private final Repository<Tuple<User, User>, Friendship> friendshipRepository;
+    private final UsernameRepository<Integer, User> userRepository;
+
     private final PaginatedRepository<Tuple<User, User>, Friendship> friendshipRepository;
     private final Repository<Integer, User> userRepository;
+
     private final ModifiableRepository<Tuple<User, User>, FriendRequest> friendRequestRepository;
     private User loggedInUser;
     private final ConvRepository<Integer, Message> messageRepository;
@@ -38,7 +44,11 @@ public class Service implements Observable<RemoveUserEvent> {
      * @param userRepository userRepository to be used
      * @param messageRepository messageRepository to be used
      */
+
+    public Service(Repository<Tuple<User, User>, Friendship> friendshipRepository, UsernameRepository<Integer, User> userRepository, ConvRepository<Integer, Message> messageRepository, ModifiableRepository<Tuple<User, User>, FriendRequest> friendRequestRepository) {
+
     public Service(PaginatedRepository<Tuple<User, User>, Friendship> friendshipRepository, Repository<Integer, User> userRepository, ConvRepository<Integer, Message> messageRepository, ModifiableRepository<Tuple<User, User>, FriendRequest> friendRequestRepository) {
+
         this.friendshipRepository = friendshipRepository;
         this.userRepository = userRepository;
         this.messageRepository = messageRepository;
@@ -162,7 +172,7 @@ public class Service implements Observable<RemoveUserEvent> {
      * @param args attributes of the new user
      */
     public void addUser(String[] args) {
-        User user = new User(args[0], args[1], LocalDate.parse(args[2], DateFormatter.STANDARD_DATE_FORMAT));
+        User user = new User(args[0], args[1],args[2], args[3], LocalDate.parse(args[4], DateFormatter.STANDARD_DATE_FORMAT));
         userRepository.save(user);
     }
     /**
@@ -302,14 +312,17 @@ public class Service implements Observable<RemoveUserEvent> {
              .collect(Collectors.toList());
     }
 
-    public boolean loginUser(Integer userId) {
-        if (userId == null ) {
+    public boolean loginUser(String username,String password) {
+        if (username == null || password == null) {
             return false;
         }
-        User foundUser = userRepository.findOne(userId);
+        //User foundUser = userRepository.findOne(userId);
+        User foundUser = userRepository.getByUsername(username);
         if (foundUser == null ) {
             return false;
         }
+        if(!foundUser.getPassword().equals(password))
+            return false;
         loggedInUser = foundUser;
         return true;
     }

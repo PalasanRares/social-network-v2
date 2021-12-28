@@ -3,6 +3,7 @@ package com.example.labsocialnetworkv2.validator;
 import com.example.labsocialnetworkv2.domain.User;
 import com.example.labsocialnetworkv2.validator.exception.EmptyFieldException;
 import com.example.labsocialnetworkv2.validator.exception.ImpossibleAgeException;
+import com.example.labsocialnetworkv2.validator.exception.InvalidPasswordException;
 import com.example.labsocialnetworkv2.validator.exception.ValidationException;
 
 import java.time.LocalDate;
@@ -13,6 +14,15 @@ import java.time.LocalDate;
 public class UserValidator implements Validator<User> {
     @Override
     public void validate(User entity) throws ValidationException {
+        if (entity.getUsername().equals("")) {
+            throw new EmptyFieldException("Username cannot be empty");
+        }
+        if (entity.getPassword().equals("")) {
+            throw new EmptyFieldException("Password cannot be empty");
+        }
+        if (entity.getPassword().length()<6) {
+            throw new InvalidPasswordException("Password has to contain over 6 characters");
+        }
         if (entity.getFirstName().equals("")) {
             throw new EmptyFieldException("First name cannot be empty");
         }

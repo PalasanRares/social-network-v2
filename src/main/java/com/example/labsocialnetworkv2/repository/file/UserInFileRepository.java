@@ -27,10 +27,12 @@ public class UserInFileRepository extends InFileRepository<Integer, User> {
     protected User createEntityFromString(String string) {
         String[] attributes = string.split(",");
         Integer id = Integer.parseInt(attributes[0]);
-        String firstName = attributes[1];
-        String lastName = attributes[2];
-        LocalDate birthday = LocalDate.parse(attributes[3], DateFormatter.STANDARD_DATE_FORMAT);
-        User u = new User(firstName, lastName, birthday);
+        String use = attributes[1];
+        String pass = attributes[2];
+        String firstName = attributes[3];
+        String lastName = attributes[4];
+        LocalDate birthday = LocalDate.parse(attributes[5], DateFormatter.STANDARD_DATE_FORMAT);
+        User u = new User(use,pass,firstName, lastName, birthday);
         u.setId(id);
         return u;
     }

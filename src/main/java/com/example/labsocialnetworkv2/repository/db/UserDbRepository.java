@@ -2,6 +2,7 @@ package com.example.labsocialnetworkv2.repository.db;
 
 import com.example.labsocialnetworkv2.domain.User;
 import com.example.labsocialnetworkv2.repository.Repository;
+import com.example.labsocialnetworkv2.repository.UsernameRepository;
 import com.example.labsocialnetworkv2.validator.UserValidator;
 import com.example.labsocialnetworkv2.validator.Validator;
 import com.example.labsocialnetworkv2.validator.exception.ValidationException;
@@ -11,7 +12,7 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
-public class UserDbRepository implements Repository<Integer, User> {
+public class UserDbRepository implements UsernameRepository<Integer, User> {
     private final String url;
     private final String username;
     private final String password;
@@ -32,12 +33,14 @@ public class UserDbRepository implements Repository<Integer, User> {
             System.out.println(ex.getMessage());
             return;
         }
-        String sql = "INSERT INTO \"Users\" (\"FirstName\", \"LastName\", \"Birthday\") VALUES (?, ?, ?)";
+        String sql = "INSERT INTO \"Users\" (\"username\",\"password\",\"FirstName\", \"LastName\", \"Birthday\") VALUES (?,?,?, ?, ?)";
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, entity.getFirstName());
-            ps.setString(2, entity.getLastName());
-            ps.setDate(3, Date.valueOf(entity.getBirthday()));
+            ps.setString(1, entity.getUsername());
+            ps.setString(2, entity.getPassword());
+            ps.setString(3, entity.getFirstName());
+            ps.setString(4, entity.getLastName());
+            ps.setDate(5, Date.valueOf(entity.getBirthday()));
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -52,10 +55,30 @@ public class UserDbRepository implements Repository<Integer, User> {
             ps.setInt(1, id);
             ps.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();;
+            e.printStackTrace();
         }
     }
 
+    public User getByUsername(String usern){
+        User user = null;
+        try (Connection connection = DriverManager.getConnection(url, username, password);
+             PreparedStatement ps = connection.prepareStatement("SELECT * FROM \"Users\" WHERE \"username\" = ?")) {
+            ps.setString(1, usern);
+            ResultSet resultSet = ps.executeQuery();
+            while (resultSet.next()) {
+                Integer id = resultSet.getInt("UserId");
+                String pass = resultSet.getString("password");
+                String firstName = resultSet.getString("FirstName");
+                String lastName = resultSet.getString("LastName");
+                LocalDate birthday = resultSet.getDate("Birthday").toLocalDate();
+                user = new User(usern,pass,firstName, lastName, birthday);
+                user.setId(id);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return user;
+    }
     @Override
     public User findOne(Integer id) {
         User user = null;
@@ -64,10 +87,12 @@ public class UserDbRepository implements Repository<Integer, User> {
             ps.setInt(1, id);
             ResultSet resultSet = ps.executeQuery();
             while (resultSet.next()) {
+                String use = resultSet.getString("username");
+                String pass = resultSet.getString("password");
                 String firstName = resultSet.getString("FirstName");
                 String lastName = resultSet.getString("LastName");
                 LocalDate birthday = resultSet.getDate("Birthday").toLocalDate();
-                user = new User(firstName, lastName, birthday);
+                user = new User(use,pass,firstName, lastName, birthday);
                 user.setId(id);
             }
         } catch (SQLException e) {
@@ -84,10 +109,12 @@ public class UserDbRepository implements Repository<Integer, User> {
              ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {
                 Integer id = resultSet.getInt("UserId");
+                String use = resultSet.getString("username");
+                String pass = resultSet.getString("password");
                 String firstName = resultSet.getString("FirstName");
                 String lastName = resultSet.getString("LastName");
                 LocalDate birthday = resultSet.getDate("Birthday").toLocalDate();
-                User user = new User(firstName, lastName, birthday);
+                User user = new User(use,pass,firstName, lastName, birthday);
                 user.setId(id);
                 users.add(user);
             }

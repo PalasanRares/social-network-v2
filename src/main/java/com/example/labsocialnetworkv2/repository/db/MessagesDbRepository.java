@@ -142,10 +142,12 @@ public class MessagesDbRepository implements ConvRepository<Integer, Message> {
             ps.setInt(1, id);
             ResultSet resultSet = ps.executeQuery();
             while (resultSet.next()) {
+                String use = resultSet.getString("username");
+                String pass = resultSet.getString("password");
                 String firstName = resultSet.getString("FirstName");
                 String lastName = resultSet.getString("LastName");
                 LocalDate birthday = resultSet.getDate("Birthday").toLocalDate();
-                user = new User(firstName, lastName, birthday);
+                user = new User(use,pass,firstName, lastName, birthday);
                 user.setId(id);
             }
         } catch (SQLException e) {
