@@ -29,11 +29,9 @@ import java.util.stream.StreamSupport;
  */
 public class Service implements Observable<RemoveUserEvent> {
 
-    private final Repository<Tuple<User, User>, Friendship> friendshipRepository;
     private final UsernameRepository<Integer, User> userRepository;
 
     private final PaginatedRepository<Tuple<User, User>, Friendship> friendshipRepository;
-    private final Repository<Integer, User> userRepository;
 
     private final ModifiableRepository<Tuple<User, User>, FriendRequest> friendRequestRepository;
     private User loggedInUser;
@@ -45,9 +43,7 @@ public class Service implements Observable<RemoveUserEvent> {
      * @param messageRepository messageRepository to be used
      */
 
-    public Service(Repository<Tuple<User, User>, Friendship> friendshipRepository, UsernameRepository<Integer, User> userRepository, ConvRepository<Integer, Message> messageRepository, ModifiableRepository<Tuple<User, User>, FriendRequest> friendRequestRepository) {
-
-    public Service(PaginatedRepository<Tuple<User, User>, Friendship> friendshipRepository, Repository<Integer, User> userRepository, ConvRepository<Integer, Message> messageRepository, ModifiableRepository<Tuple<User, User>, FriendRequest> friendRequestRepository) {
+    public Service(PaginatedRepository<Tuple<User, User>, Friendship> friendshipRepository, UsernameRepository<Integer, User> userRepository, ConvRepository<Integer, Message> messageRepository, ModifiableRepository<Tuple<User, User>, FriendRequest> friendRequestRepository) {
 
         this.friendshipRepository = friendshipRepository;
         this.userRepository = userRepository;

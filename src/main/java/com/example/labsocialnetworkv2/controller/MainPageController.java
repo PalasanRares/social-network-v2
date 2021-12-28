@@ -47,12 +47,25 @@ public class MainPageController implements Observer<RemoveUserEvent> {
 
         TableColumn<User, Integer> columnId = new TableColumn<>("User Id");
         columnId.setCellValueFactory(new PropertyValueFactory<>("id"));
-        ///---
-        addButtonToTable();
+        TableColumn<User, String> columnFirstName = new TableColumn<>("First Name");
+        columnFirstName.setCellValueFactory(new PropertyValueFactory<>("firstName"));
+
+        TableColumn<User, String> columnLastName = new TableColumn<>("Last Name");
+        columnLastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
+
+        TableColumn<User, String> columnBirthday = new TableColumn<>("Birthday");
+        columnBirthday.setCellValueFactory(new PropertyValueFactory<>("birthday"));
+
+        table.getColumns().add(columnId);
+        table.getColumns().add(columnFirstName);
+        table.getColumns().add(columnLastName);
+        table.getColumns().add(columnBirthday);
+        addButtonToTable(table);
+        return table;
     }
   
-    private void addButtonToTable() {
-        TableColumn<User, Void> colBtn = new TableColumn("");
+    private void addButtonToTable(TableView<User> tableView) {
+        TableColumn<User, Void> colBtn = new TableColumn<>("");
 
         Callback<TableColumn<User, Void>, TableCell<User, Void>> cellFactory = new Callback<TableColumn<User, Void>, TableCell<User, Void>>() {
             @Override
@@ -106,21 +119,6 @@ public class MainPageController implements Observer<RemoveUserEvent> {
 
         tableView.getColumns().add(colBtn);
 
-        TableColumn<User, String> columnFirstName = new TableColumn<>("First Name");
-        columnFirstName.setCellValueFactory(new PropertyValueFactory<>("firstName"));
-
-        TableColumn<User, String> columnLastName = new TableColumn<>("Last Name");
-        columnLastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
-
-        TableColumn<User, String> columnBirthday = new TableColumn<>("Birthday");
-        columnBirthday.setCellValueFactory(new PropertyValueFactory<>("birthday"));
-
-        table.getColumns().add(columnId);
-        table.getColumns().add(columnFirstName);
-        table.getColumns().add(columnLastName);
-        table.getColumns().add(columnBirthday);
-
-        return table;
     }
 
     @Override

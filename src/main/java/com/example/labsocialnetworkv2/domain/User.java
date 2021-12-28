@@ -60,6 +60,12 @@ public class User extends Entity<Integer> {
         this.birthday = null;
     }
 
+    public User(String firstName, String lastName, LocalDate birthday) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.birthday = birthday;
+    }
+
     /**
      * Add a friend to the user's friends list
      * @param friend friend to be added
