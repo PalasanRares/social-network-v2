@@ -6,6 +6,7 @@ import com.example.labsocialnetworkv2.domain.User;
 import com.example.labsocialnetworkv2.repository.ModifiableRepository;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -86,7 +87,40 @@ public class FriendRequestDbRepository implements ModifiableRepository<Tuple<Use
 
     @Override
     public Iterable<FriendRequest> findAll() {
-        return null;
+        Set<FriendRequest> friendRequests = new HashSet<>();
+        try (Connection connection = DriverManager.getConnection(url, username, password);
+             PreparedStatement ps = connection.prepareStatement("SELECT * FROM friend_requests");
+             ResultSet resultSet = ps.executeQuery()) {
+            while (resultSet.next()) {
+                Integer from = resultSet.getInt("from");
+                Integer to = resultSet.getInt("to");
+                String status = resultSet.getString("status");
+                LocalDate sendDate = resultSet.getDate("dataTrimiterii").toLocalDate();
+
+                PreparedStatement psUsers = connection.prepareStatement("SELECT * FROM \"Users\" WHERE \"UserId\" = ? OR \"UserId\" = ?");
+                psUsers.setInt(1, from);
+                psUsers.setInt(2, to);
+                ResultSet rsUsers = psUsers.executeQuery();
+                User user1 = new User();
+                User user2 = new User();
+                while (rsUsers.next()) {
+                    if (rsUsers.getInt("UserId") == from) {
+                        user1 = new User(rsUsers.getString("FirstName"), rsUsers.getString("LastName"), rsUsers.getDate("Birthday").toLocalDate());
+                        user1.setId(from);
+                    }
+                    if (rsUsers.getInt("UserId") == to) {
+                        user2 = new User(rsUsers.getString("FirstName"), rsUsers.getString("LastName"), rsUsers.getDate("Birthday").toLocalDate());
+                        user2.setId(to);
+                    }
+                }
+                FriendRequest friendRequest = new FriendRequest(new Tuple<>(user1, user2), status, sendDate);
+                friendRequests.add(friendRequest);
+            }
+        }
+        catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return friendRequests;
     }
 
     @Override
