@@ -1,0 +1,88 @@
+.pagination {
+    -fx-background-color: #212129;
+}
+
+.pagination .pagination-control .number-button {
+    -fx-background-color: #40445a;
+    -fx-background-radius: 10;
+    -fx-text-fill: #e8fff5;
+}
+
+.pagination .pagination-control .number-button:selected {
+    -fx-background-color: transparent;
+}
+
+.pagination .pagination-control .left-arrow-button {
+    -fx-background-color: #40445a;
+    -fx-background-radius: 10;
+}
+
+.pagination .pagination-control .right-arrow-button {
+    -fx-background-color: #40445a;
+    -fx-background-radius: 10;
+}
+
+.pagination .pagination-control .left-arrow-button .left-arrow {
+    -fx-background-color: #e8fff5;
+}
+
+.pagination .pagination-control .right-arrow-button .right-arrow {
+    -fx-background-color: #e8fff5;
+}
+
+.pagination .pagination-control .page-information {
+    -fx-text-fill: #e8fff5;
+}
+
+.table-view {
+    -fx-background-color: #212129;
+}
+
+.table-view .placeholder .label {
+    -fx-text-fill: #e8fff5;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #40445a;
+    -fx-background-radius: 15px 15px 0px 0px;
+    -fx-text-fill: #e8fff5;
+}
+
+.table-view .column-header {
+    -fx-background-color: transparent;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: #e8fff5;
+}
+
+.table-row-cell {
+    -fx-border-color: transparent;
+    -fx-table-cell-border-color: transparent;
+}
+
+.table-cell {
+    -fx-text-fill: #e8fff5;
+}
+
+.table-column {
+    -fx-alignment: center;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: #40445a;
+}
+
+.table-row-cell:even {
+    -fx-background-color: #4c5265;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #212129;
+}
+
+.button {
+    -fx-background-color: #3d3e51;
+    -fx-background-radius: 15px;
+    -fx-text-fill: #e8fff5;
+}

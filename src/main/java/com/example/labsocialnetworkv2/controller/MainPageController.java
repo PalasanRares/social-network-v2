@@ -47,14 +47,19 @@ public class MainPageController implements Observer<RemoveUserEvent> {
 
         TableColumn<User, Integer> columnId = new TableColumn<>("User Id");
         columnId.setCellValueFactory(new PropertyValueFactory<>("id"));
+        columnId.setPrefWidth(100);
+
         TableColumn<User, String> columnFirstName = new TableColumn<>("First Name");
         columnFirstName.setCellValueFactory(new PropertyValueFactory<>("firstName"));
+        columnFirstName.setPrefWidth(100);
 
         TableColumn<User, String> columnLastName = new TableColumn<>("Last Name");
         columnLastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
+        columnLastName.setPrefWidth(100);
 
         TableColumn<User, String> columnBirthday = new TableColumn<>("Birthday");
         columnBirthday.setCellValueFactory(new PropertyValueFactory<>("birthday"));
+        columnBirthday.setPrefWidth(100);
 
         table.getColumns().add(columnId);
         table.getColumns().add(columnFirstName);
@@ -113,8 +118,9 @@ public class MainPageController implements Observer<RemoveUserEvent> {
         };
 
         colBtn.setCellFactory(cellFactory);
+        colBtn.setPrefWidth(100);
 
-        tableView.setPrefWidth(450);
+        tableView.setPrefWidth(500);
         tableView.setPrefHeight(200);
 
         tableView.getColumns().add(colBtn);
