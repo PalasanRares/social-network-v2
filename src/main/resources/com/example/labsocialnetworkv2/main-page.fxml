@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Pagination?>
 <?import javafx.scene.image.Image?>
@@ -11,39 +12,49 @@
 <?import javafx.scene.text.Font?>
 
 <AnchorPane fx:id="anp" prefHeight="400.0" prefWidth="709.0" style="-fx-background-color: #212129;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.labsocialnetworkv2.controller.MainPageController">
-    <Button alignment="CENTER" layoutX="204.0" layoutY="329.0" mnemonicParsing="false" onAction="#handleRemoveButton" style="-fx-background-color: #3d3e51; -fx-background-radius: 15;" text="Remove" textAlignment="CENTER" textFill="#e8fff5">
+    <Button alignment="CENTER" layoutX="210.0" layoutY="335.0" mnemonicParsing="false" onAction="#handleRemoveButton" style="-fx-background-color: #3d3e51; -fx-background-radius: 15;" text="Remove" textAlignment="CENTER" textFill="#e8fff5">
       <font>
          <Font size="17.0" />
       </font></Button>
-   <Pagination fx:id="friendshipTablePagination" prefHeight="317.0" prefWidth="502.0" stylesheets="@css/pagination.css" />
+   <Pagination fx:id="friendshipTablePagination" prefHeight="320.0" prefWidth="512.0" stylesheets="@css/pagination.css">
+      <padding>
+         <Insets left="10.0" />
+      </padding></Pagination>
    <GridPane alignment="CENTER" layoutX="505.0" prefHeight="400.0" prefWidth="190.0" style="-fx-padding: 15 0;">
      <columnConstraints>
        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
      </columnConstraints>
      <rowConstraints>
        <RowConstraints maxHeight="137.0" minHeight="10.0" prefHeight="81.0" vgrow="SOMETIMES" />
-       <RowConstraints maxHeight="99.0" minHeight="0.0" prefHeight="56.0" vgrow="SOMETIMES" />
-       <RowConstraints maxHeight="151.0" minHeight="10.0" prefHeight="134.0" vgrow="SOMETIMES" />
-         <RowConstraints maxHeight="107.0" minHeight="10.0" prefHeight="107.0" vgrow="SOMETIMES" />
+       <RowConstraints maxHeight="99.0" minHeight="0.0" prefHeight="81.0" vgrow="SOMETIMES" />
+       <RowConstraints maxHeight="151.0" minHeight="10.0" prefHeight="81.0" vgrow="SOMETIMES" />
+         <RowConstraints maxHeight="107.0" minHeight="10.0" prefHeight="81.0" vgrow="SOMETIMES" />
      </rowConstraints>
       <children>
       
-         <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleRequestButton" prefHeight="81.0" prefWidth="100.0" style="-fx-background-color: #323949; -fx-background-radius: 15;" textFill="#e8fff5" GridPane.halignment="CENTER">
+         <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleRequestButton" prefHeight="80.0" prefWidth="131.0" style="-fx-background-color: #323949; -fx-background-radius: 15;" text="Friend Requests" textAlignment="CENTER" textFill="#e8fff5" wrapText="true" GridPane.halignment="CENTER" GridPane.rowIndex="1">
             <font>
                <Font size="17.0" />
             </font>
+         </Button>
+         <Button mnemonicParsing="false" onAction="#handleLogoutButton" prefHeight="80.0" prefWidth="131.0" style="-fx-background-color: #323949; -fx-background-radius: 15;" GridPane.rowIndex="3">
+            <graphic>
+               <ImageView fitHeight="76.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
+                  <image>
+                     <Image url="@icons/LogoutIcon.png" />
+                  </image>
+               </ImageView>
+            </graphic></Button>
+         <Button mnemonicParsing="false" onAction="#handleSentFriendRequestsButton" prefHeight="80.0" prefWidth="131.0" style="-fx-background-color: #323949; -fx-background-radius: 15;" text="Sent Friend Requests" textAlignment="CENTER" textFill="#e8fff5" wrapText="true" GridPane.rowIndex="2" />
+        
+          <Button alignment="CENTER" mnemonicParsing="false" onAction="#handleAddFriendButton" prefHeight="80.0" prefWidth="131.0" style="-fx-background-color: #323949; -fx-background-radius: 15;">
             <graphic>
                <ImageView fitHeight="68.0" fitWidth="146.0" pickOnBounds="true" preserveRatio="true">
                   <image>
                      <Image url="@icons/AddFriendIcon.png" />
                   </image>
                </ImageView>
-            </graphic>
-         </Button>
-        
-          <Button mnemonicParsing="false" onAction="#handleAddFriendButton" text="Add Friend" GridPane.rowIndex="1" />
-         <Button mnemonicParsing="false" onAction="#handleLogoutButton" text="Logout" GridPane.rowIndex="2" />
-         <Button mnemonicParsing="false" onAction="#handleSentFriendRequestsButton" text="Sent Friend Requests" GridPane.rowIndex="3" />
+            </graphic></Button>
       </children>
    </GridPane>
 
