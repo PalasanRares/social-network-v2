@@ -13,4 +13,5 @@ module com.example.labsocialnetworkv2 {
 
     opens com.example.labsocialnetworkv2.domain to javafx.base;
     exports com.example.labsocialnetworkv2.controller;
+    exports com.example.labsocialnetworkv2.application;
 }

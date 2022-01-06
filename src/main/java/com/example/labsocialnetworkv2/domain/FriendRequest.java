@@ -35,6 +35,18 @@ public class FriendRequest extends Entity<Tuple<User, User>> {
         return id.getSecond();
     }
 
+    public String getFromName() {
+        return id.getFirst().getFullName();
+    }
+
+    public String getToName() {
+        return id.getSecond().getFullName();
+    }
+
+    public LocalDate getSentDate() {
+        return dataTrimiterii;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
