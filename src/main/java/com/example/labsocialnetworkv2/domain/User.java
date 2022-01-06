@@ -14,7 +14,27 @@ public class User extends Entity<Integer> {
     private String firstName;
     private String lastName;
     private LocalDate birthday;
+    //--
+    private String username;
+    private String password;
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    //--
     private List<User> friendsList = null;
 
     /**
@@ -24,16 +44,26 @@ public class User extends Entity<Integer> {
      * @param lastName last name of the user
      * @param birthday birthday of the user
      */
-    public User(String firstName, String lastName, LocalDate birthday) {
+    public User(String username,String password,String firstName, String lastName, LocalDate birthday) {
+        this.username=username;
+        this.password=password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.birthday = birthday;
     }
 
     public User() {
+        this.username=null;
+        this.password=null;
         this.firstName = null;
         this.lastName = null;
         this.birthday = null;
+    }
+
+    public User(String firstName, String lastName, LocalDate birthday) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.birthday = birthday;
     }
 
     /**
@@ -60,7 +90,7 @@ public class User extends Entity<Integer> {
 
     @Override
     public String toString() {
-        return super.toString() + " " + firstName + " " + lastName + " " + birthday.format(DateFormatter.STANDARD_DATE_FORMAT);
+        return super.toString() + " " + username + " " + firstName + " " + lastName + " " + birthday.format(DateFormatter.STANDARD_DATE_FORMAT);
     }
 
     /**

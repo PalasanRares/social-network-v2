@@ -142,10 +142,12 @@ public class MessagesDbRepository implements ConvRepository<Integer, Message> {
             ps.setInt(1, id);
             ResultSet resultSet = ps.executeQuery();
             while (resultSet.next()) {
+                String use = resultSet.getString("username");
+                String pass = resultSet.getString("password");
                 String firstName = resultSet.getString("FirstName");
                 String lastName = resultSet.getString("LastName");
                 LocalDate birthday = resultSet.getDate("Birthday").toLocalDate();
-                user = new User(firstName, lastName, birthday);
+                user = new User(use,pass,firstName, lastName, birthday);
                 user.setId(id);
             }
         } catch (SQLException e) {
@@ -153,6 +155,25 @@ public class MessagesDbRepository implements ConvRepository<Integer, Message> {
         }
         return user;
 
+    }
+    public Integer getMostRecentMessage(){
+        Integer id=0;
+        try (Connection connection = DriverManager.getConnection(url, username, password);
+             PreparedStatement ps = connection.prepareStatement("SELECT \"Id\" FROM \"Messages\" ORDER BY \"Id\" DESC LIMIT 1")) {
+
+
+            ResultSet resultSet = ps.executeQuery();
+
+            while (resultSet.next()) {
+               id = resultSet.getInt("Id");
+                return id;
+
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return id;
     }
     public List<User> getReceiversList(Integer id){
         List<User> rez =new ArrayList<>();

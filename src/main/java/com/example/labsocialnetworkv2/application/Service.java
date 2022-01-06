@@ -5,7 +5,9 @@ import com.example.labsocialnetworkv2.constants.Sortbydate;
 import com.example.labsocialnetworkv2.domain.*;
 import com.example.labsocialnetworkv2.repository.ConvRepository;
 import com.example.labsocialnetworkv2.repository.ModifiableRepository;
+import com.example.labsocialnetworkv2.repository.PaginatedRepository;
 import com.example.labsocialnetworkv2.repository.Repository;
+import com.example.labsocialnetworkv2.repository.UsernameRepository;
 import com.example.labsocialnetworkv2.utils.events.RemoveUserEvent;
 import com.example.labsocialnetworkv2.utils.observer.Observable;
 import com.example.labsocialnetworkv2.utils.observer.Observer;
@@ -26,8 +28,11 @@ import java.util.stream.StreamSupport;
  * Service which manages user and friendship repositories
  */
 public class Service implements Observable<RemoveUserEvent> {
-    private final Repository<Tuple<User, User>, Friendship> friendshipRepository;
-    private final Repository<Integer, User> userRepository;
+
+    private final UsernameRepository<Integer, User> userRepository;
+
+    private final PaginatedRepository<Tuple<User, User>, Friendship> friendshipRepository;
+
     private final ModifiableRepository<Tuple<User, User>, FriendRequest> friendRequestRepository;
     private User loggedInUser;
     private final ConvRepository<Integer, Message> messageRepository;
@@ -37,12 +42,28 @@ public class Service implements Observable<RemoveUserEvent> {
      * @param userRepository userRepository to be used
      * @param messageRepository messageRepository to be used
      */
-    public Service(Repository<Tuple<User, User>, Friendship> friendshipRepository, Repository<Integer, User> userRepository, ConvRepository<Integer, Message> messageRepository, ModifiableRepository<Tuple<User, User>, FriendRequest> friendRequestRepository) {
+
+    public Service(PaginatedRepository<Tuple<User, User>, Friendship> friendshipRepository, UsernameRepository<Integer, User> userRepository, ConvRepository<Integer, Message> messageRepository, ModifiableRepository<Tuple<User, User>, FriendRequest> friendRequestRepository) {
+
         this.friendshipRepository = friendshipRepository;
         this.userRepository = userRepository;
         this.messageRepository = messageRepository;
         this.friendRequestRepository = friendRequestRepository;
         loggedInUser = null;
+    }
+
+    public Iterable<User> getFriendshipsPage(int pageNumber, int rowsOnPage) {
+        return StreamSupport.stream(friendshipRepository.findAllPage(pageNumber, rowsOnPage, loggedInUser.getId()).spliterator(), false)
+                .map(friendship -> {
+                    if (friendship.getId().getFirst().equals(loggedInUser)) {
+                        return friendship.getId().getSecond();
+                    }
+                    if (friendship.getId().getSecond().equals(loggedInUser)) {
+                        return friendship.getId().getFirst();
+                    }
+                    return null;
+                })
+                .collect(Collectors.toList());
     }
 
     /**
@@ -79,9 +100,16 @@ public class Service implements Observable<RemoveUserEvent> {
     public void removeFriendship(String id1, String id2) {
         User user1 = userRepository.findOne(Integer.parseInt(id1));
         User user2 = userRepository.findOne(Integer.parseInt(id2));
-        Tuple<User, User> id = new Tuple<>(user1, user2);
-        if (friendshipRepository.findOne(id) != null) {
-            friendshipRepository.remove(id);
+        Tuple<User, User> firstId = new Tuple<>(user1, user2);
+        Tuple<User, User> secondId = new Tuple<>(user2, user1);
+        if (friendshipRepository.findOne(firstId) != null) {
+            friendshipRepository.remove(firstId);
+            if (friendRequestRepository.findOne(firstId) != null) {
+                friendRequestRepository.remove(firstId);
+            }
+            else if (friendRequestRepository.findOne(secondId) != null) {
+                friendRequestRepository.remove(secondId);
+            }
         }
     }
 
@@ -89,6 +117,9 @@ public class Service implements Observable<RemoveUserEvent> {
         Friendship friendship = new Friendship(new Tuple<>(user1, user2));
         if (friendshipRepository.findOne(friendship.getId()) != null) {
             friendshipRepository.remove(friendship.getId());
+            if (friendRequestRepository.findOne(friendship.getId()) != null) {
+                friendRequestRepository.remove(friendship.getId());
+            }
         }
         notifyObservers(new RemoveUserEvent(friendship.getId().getFirst()));
     }
@@ -137,7 +168,7 @@ public class Service implements Observable<RemoveUserEvent> {
      * @param args attributes of the new user
      */
     public void addUser(String[] args) {
-        User user = new User(args[0], args[1], LocalDate.parse(args[2], DateFormatter.STANDARD_DATE_FORMAT));
+        User user = new User(args[0], args[1],args[2], args[3], LocalDate.parse(args[4], DateFormatter.STANDARD_DATE_FORMAT));
         userRepository.save(user);
     }
     /**
@@ -162,6 +193,7 @@ public class Service implements Observable<RemoveUserEvent> {
         Message msg = new Message(sender,list,args[i],LocalDate.now(),null);
         messageRepository.save(msg);
     }
+    public Integer getLastMessage(){ return messageRepository.getMostRecentMessage();}
     public  Iterable<Message> Conversatie(Integer u1,Integer u2){
         if(u1 == null || u2 == null)throw new NullPointerException("id must not be null");
         User user1 = userRepository.findOne(u1);
@@ -276,14 +308,17 @@ public class Service implements Observable<RemoveUserEvent> {
              .collect(Collectors.toList());
     }
 
-    public boolean loginUser(Integer userId) {
-        if (userId == null ) {
+    public boolean loginUser(String username,String password) {
+        if (username == null || password == null) {
             return false;
         }
-        User foundUser = userRepository.findOne(userId);
+        //User foundUser = userRepository.findOne(userId);
+        User foundUser = userRepository.getByUsername(username);
         if (foundUser == null ) {
             return false;
         }
+        if(!foundUser.getPassword().equals(password))
+            return false;
         loggedInUser = foundUser;
         return true;
     }
@@ -302,6 +337,10 @@ public class Service implements Observable<RemoveUserEvent> {
             if (friendRequestRepository.findOne(friendRequest.getId()) != null) {
                 throw new DuplicateFriendshipException("This friend request already exists");
             }
+            FriendRequest friendRequest1 = new FriendRequest(new Tuple<>(friend, loggedInUser), "pending");
+            if (friendRequestRepository.findOne(friendRequest1.getId()) != null) {
+                throw new DuplicateFriendshipException("This friend request already exists");
+            }
             friendRequestRepository.save(friendRequest);
             return true;
         }
@@ -313,6 +352,12 @@ public class Service implements Observable<RemoveUserEvent> {
 
     public Iterable<FriendRequest> getFriendRequests() {
         return friendRequestRepository.findAllForId(new Tuple<>(new User(), loggedInUser));
+    }
+
+    public Iterable<FriendRequest> getSentFriendRequests() {
+        return StreamSupport.stream(friendRequestRepository.findAll().spliterator(), false)
+                .filter(friendRequest -> friendRequest.getId().getFirst().equals(loggedInUser) && friendRequest.getStatus().equals("pending"))
+                .collect(Collectors.toList());
     }
 
     public void acceptFriendRequest(Integer from) {
@@ -335,6 +380,12 @@ public class Service implements Observable<RemoveUserEvent> {
         }
         catch (RuntimeException ex) {
             System.out.println(ex.getMessage());
+        }
+    }
+
+    public void removeFriendRequest(FriendRequest friendRequest) {
+        if (friendRequestRepository.findOne(friendRequest.getId()) != null) {
+            friendRequestRepository.remove(friendRequest.getId());
         }
     }
 
