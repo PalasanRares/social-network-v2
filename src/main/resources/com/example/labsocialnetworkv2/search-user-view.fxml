@@ -4,12 +4,20 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
-
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.example.labsocialnetworkv2.controller.SearchUserController">
-    <ListView fx:id="listView" layoutX="34.0" layoutY="28.0" prefHeight="344.0" prefWidth="266.0"/>
-    <TextField fx:id="textFieldName" layoutX="323.0" layoutY="82.0"/>
-    <Button fx:id="buttonSearch" layoutX="506.0" layoutY="82.0" onAction="#handleSearchButton" mnemonicParsing="false" text="Search"/>
-    <Button fx:id="buttonSendRequest" layoutX="323.0" layoutY="129.0" onAction="#handleSendRequestButton" mnemonicParsing="false" text="Send Friend Request"/>
+<AnchorPane prefHeight="500.0" prefWidth="300.0" style="-fx-background-color: #212129;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.labsocialnetworkv2.controller.SearchUserController">
+    <ListView fx:id="listView" layoutX="17.0" layoutY="66.0" prefHeight="368.0" prefWidth="266.0" style="-fx-background-color: #40445a; -fx-background-radius: 15;" />
+    <TextField fx:id="textFieldName" alignment="CENTER" layoutX="17.0" layoutY="25.0" prefWidth="171.0" promptText="Type name..." style="-fx-background-color: #40445a; -fx-background-radius: 15; -fx-text-fill: #e8fff5;">
+      <font>
+         <Font size="17.0" />
+      </font></TextField>
+    <Button fx:id="buttonSearch" layoutX="202.0" layoutY="25.0" mnemonicParsing="false" onAction="#handleSearchButton" prefHeight="24.0" prefWidth="84.0" style="-fx-background-color: #40445a; -fx-background-radius: 15;" text="Search" textFill="#e8fff5">
+      <font>
+         <Font size="17.0" />
+      </font></Button>
+    <Button fx:id="buttonSendRequest" layoutX="42.0" layoutY="443.0" mnemonicParsing="false" onAction="#handleSendRequestButton" prefHeight="43.0" prefWidth="217.0" style="-fx-background-color: #40445a; -fx-background-radius: 15;" text="Send Friend Request" textFill="#e8fff5">
+      <font>
+         <Font size="17.0" />
+      </font></Button>
 </AnchorPane>
