@@ -65,6 +65,7 @@ public class FriendRequestDbRepository implements ModifiableRepository<Tuple<Use
                 Integer id1 = resultSet.getInt("from");
                 Integer id2 = resultSet.getInt("to");
                 String status = resultSet.getString("status");
+                LocalDate requestDate = resultSet.getDate("dataTrimiterii").toLocalDate();
 
                 PreparedStatement psUsers = connection.prepareStatement("SELECT * FROM \"Users\" WHERE \"UserId\" = ? OR \"UserId\" = ?");
                 psUsers.setInt(1, id1);
@@ -77,7 +78,7 @@ public class FriendRequestDbRepository implements ModifiableRepository<Tuple<Use
                 User user2 = new User(users.getString("username"),users.getString("password"),users.getString("FirstName"), users.getString("LastName"), users.getDate("Birthday").toLocalDate());
                 user2.setId(users.getInt("UserId"));
 
-                request = new FriendRequest(new Tuple<>(user1, user2), status);
+                request = new FriendRequest(new Tuple<>(user1, user2), status, requestDate);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -135,6 +136,8 @@ public class FriendRequestDbRepository implements ModifiableRepository<Tuple<Use
                 Integer from = resultSet.getInt("from");
                 Integer to = resultSet.getInt("to");
                 String status = resultSet.getString("status");
+                LocalDate sendDate = resultSet.getDate("dataTrimiterii").toLocalDate();
+
                 PreparedStatement psUsers = connection.prepareStatement("SELECT * FROM \"Users\" WHERE \"UserId\" = ? OR \"UserId\" = ?");
                 psUsers.setInt(1, from);
                 psUsers.setInt(2, to);
@@ -151,7 +154,7 @@ public class FriendRequestDbRepository implements ModifiableRepository<Tuple<Use
                         user2.setId(to);
                     }
                 }
-                FriendRequest friendRequest = new FriendRequest(new Tuple<User, User>(user1, user2), status);
+                FriendRequest friendRequest = new FriendRequest(new Tuple<>(user1, user2), status, sendDate);
                 requests.add(friendRequest);
             }
         } catch (SQLException e) {
