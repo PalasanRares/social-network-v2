@@ -194,6 +194,7 @@ public class Service implements Observable<RemoveUserEvent> {
         messageRepository.save(msg);
     }
     public Integer getLastMessage(){ return messageRepository.getMostRecentMessage();}
+
     public  Iterable<Message> Conversatie(Integer u1,Integer u2){
         if(u1 == null || u2 == null)throw new NullPointerException("id must not be null");
         User user1 = userRepository.findOne(u1);
@@ -454,4 +455,21 @@ public class Service implements Observable<RemoveUserEvent> {
                         !user.equals(loggedInUser))
                 .collect(Collectors.toList());
     }
+
+    public Page createPageForUser(Integer id){
+        if(id==null)throw new NullPointerException("id ul nu poate fi null");
+        User user =userRepository.findOne(id);
+        if(user == null)throw new UserNotFoundException("nu s-a gasit utilizatorul");
+        List<User> fr=new ArrayList<User>(StreamSupport.stream(findLoggedUsersFriends().spliterator(), false).toList());
+        List<FriendRequest> req =new ArrayList<FriendRequest>(StreamSupport.stream(getFriendRequests().spliterator(), false).toList());
+        Page pagina = new Page(user.getFirstName(),user.getLastName(),fr,req);
+        return pagina;
+    }
+   /* public Page updatePageForUser(Page pagina){
+        List<User> fr=new ArrayList<User>(StreamSupport.stream(findLoggedUsersFriends().spliterator(), false).toList());
+        List<FriendRequest> req =new ArrayList<FriendRequest>(StreamSupport.stream(getFriendRequests().spliterator(), false).toList());
+        pagina.setCereriDePrietenie(req);
+        pagina.setPrieteni(fr);
+        return pagina;
+    }*/
 }
