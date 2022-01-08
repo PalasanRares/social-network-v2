@@ -32,7 +32,7 @@ public class MainPage extends Application {
         friendRequestRepository = new FriendRequestDbRepository("jdbc:postgresql://localhost:5432/SocialNetwork", "postgres", "postgres");
         msgRepository = new MessagesDbRepository("jdbc:postgresql://localhost:5432/SocialNetwork", "postgres", "postgres");
 
-        service = new Service(friendshipRepository, userRepository, msgRepository, friendRequestRepository);
+//        service = new Service(friendshipRepository, userRepository, msgRepository, friendRequestRepository);
 
         initView(primaryStage);
         primaryStage.show();

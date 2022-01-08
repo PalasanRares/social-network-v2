@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="500.0" prefWidth="400.0" style="-fx-background-color: #212129;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.labsocialnetworkv2.controller.EventsPageController">
+   <children>
+      <Label alignment="CENTER" layoutX="67.0" layoutY="14.0" prefHeight="34.0" prefWidth="117.0" text="Add event" textAlignment="CENTER" textFill="#e8fff5">
+         <font>
+            <Font size="17.0" />
+         </font>
+      </Label>
+      <TextField fx:id="eventNameTextField" layoutX="14.0" layoutY="48.0" prefHeight="33.0" prefWidth="251.0" promptText="Event name" style="-fx-background-color: #323949; -fx-background-radius: 15; -fx-text-fill: #e8fff5;">
+         <font>
+            <Font size="17.0" />
+         </font>
+      </TextField>
+      <DatePicker fx:id="eventDateDatePicker" layoutX="14.0" layoutY="89.0" prefHeight="33.0" prefWidth="251.0" promptText="Event date" style="-fx-background-color: #323949;" stylesheets="@css/date-picker.css" />
+      <Button onAction="#handleAddEventButton" layoutX="205.0" layoutY="132.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="60.0" style="-fx-background-color: #323949; -fx-background-radius: 15;" text="Add" textFill="#e8fff5">
+         <font>
+            <Font size="17.0" />
+         </font>
+      </Button>
+      <TableView fx:id="tableView" layoutX="23.0" layoutY="191.0" prefHeight="295.0" prefWidth="356.0" stylesheets="@css/friend-requests-table.css">
+        <columns>
+          <TableColumn fx:id="eventNameColumn" prefWidth="118.0" text="Event Name" />
+          <TableColumn fx:id="eventDateColumn" prefWidth="118.0" text="Event Date" />
+            <TableColumn fx:id="notifyColumn" prefWidth="118.0" />
+        </columns>
+      </TableView>
+   </children>
+</AnchorPane>

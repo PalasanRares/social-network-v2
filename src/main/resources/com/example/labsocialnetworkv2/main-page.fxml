@@ -50,7 +50,10 @@
                   </image>
                </ImageView>
             </graphic></Button>
-         <Button alignment="CENTER" mnemonicParsing="false" onAction="#handleSentFriendRequestsButton" prefHeight="80.0" prefWidth="131.0" style="-fx-background-color: #323949; -fx-background-radius: 15;" text="Sent Friend Requests" textAlignment="CENTER" textFill="#e8fff5" wrapText="true" GridPane.rowIndex="2" />
+         <Button alignment="CENTER" mnemonicParsing="false" onAction="#handleEventsButton" prefHeight="80.0" prefWidth="131.0" style="-fx-background-color: #323949; -fx-background-radius: 15;" text="Events" textAlignment="CENTER" textFill="#e8fff5" wrapText="true" GridPane.rowIndex="2">
+            <font>
+               <Font size="17.0" />
+            </font></Button>
         
           <Button alignment="CENTER" mnemonicParsing="false" onAction="#handleAddFriendButton" prefHeight="80.0" prefWidth="131.0" style="-fx-background-color: #323949; -fx-background-radius: 15;">
             <graphic>
@@ -62,5 +65,17 @@
             </graphic></Button>
       </children>
    </GridPane>
+   <Button fx:id="notificationsButton" contentDisplay="CENTER" layoutX="14.0" layoutY="332.0" mnemonicParsing="false" onAction="#handleNotificationsButton" prefHeight="33.0" prefWidth="40.0" style="-fx-background-color: #323949; -fx-background-radius: 15;" textFill="#e8fff5">
+      <graphic>
+         <ImageView fx:id="notificationsIcon" fitHeight="34.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+               <Image url="@icons/BellIcon.png" />
+            </image>
+         </ImageView>
+      </graphic>
+      <font>
+         <Font size="17.0" />
+      </font>
+   </Button>
 
 </AnchorPane>

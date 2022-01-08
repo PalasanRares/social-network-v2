@@ -1,0 +1,63 @@
+*{
+    -fx-primary-color: #323949;
+    -fx-secondary-color: #4c5265;
+    -fx-third-color: #40445a;
+    -fx-text-color: #e8fff5;
+}
+
+.date-picker-display-node {
+    -fx-background-color: -fx-primary-color;
+    -fx-text-fill: -fx-text-color;
+    -fx-background-radius: 15;
+    -fx-font-size: 17;
+}
+
+.date-picker {
+    -fx-background-radius: 15;
+}
+
+.date-picker .arrow-button {
+    -fx-background-color: -fx-secondary-color;
+    -fx-background-radius: 15;
+}
+
+.date-picker .arrow-button .arrow {
+    -fx-background-color: -fx-primary-color;
+}
+.date-picker .cell {
+    -fx-background-color: -fx-primary-color;
+    -fx-text-fill: -fx-text-color;
+}
+.date-picker .cell:hover {
+    -fx-background-color: -fx-secondary-color;
+    -fx-text-fill: -fx-text-color;
+}
+.date-picker .cell:focused {
+    -fx-background-color: -fx-secondary-color;
+    -fx-text-fill: -fx-text-color;
+}
+.date-picker .selected {
+    -fx-background-color: -fx-third-color;
+    -fx-text-fill: -fx-text-color;
+}
+.date-picker .selected:focused {
+    -fx-background-color: -fx-primary-color;
+    -fx-text-fill: -fx-text-color;
+}
+.date-picker-popup  {
+    -fx-border-color: transparent;
+    -fx-background-radius: 0 0 15 15;
+}
+.date-picker-popup .month-year-pane {
+    -fx-background-color: -fx-primary-color;
+}
+.date-picker-popup .month-year-pane .label {
+    -fx-text-fill: -fx-text-color;
+}
+.date-picker-popup .week-number-cell {
+    -fx-text-fill: -fx-text-color;
+}
+.date-picker-popup .spinner .button .left-arrow,
+.date-picker-popup .spinner .button .right-arrow {
+    -fx-background-color: -fx-text-color;
+}
