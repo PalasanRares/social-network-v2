@@ -1,10 +1,7 @@
 package com.example.labsocialnetworkv2.controller;
 
 import com.example.labsocialnetworkv2.application.Service;
-import com.example.labsocialnetworkv2.domain.FriendRequest;
-import com.example.labsocialnetworkv2.domain.Friendship;
-import com.example.labsocialnetworkv2.domain.Tuple;
-import com.example.labsocialnetworkv2.domain.User;
+import com.example.labsocialnetworkv2.domain.*;
 import com.example.labsocialnetworkv2.utils.events.RemoveUserEvent;
 import com.example.labsocialnetworkv2.utils.observer.Observer;
 import javafx.collections.FXCollections;
@@ -23,13 +20,14 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 public class MainPageController implements Observer<RemoveUserEvent> {
     private Service service;
-
+    private Page pagina;
     @FXML
     TableView<User> tableView = createTable();
     @FXML
@@ -40,6 +38,7 @@ public class MainPageController implements Observer<RemoveUserEvent> {
         this.service = service;
         service.addObserver(this);
         friendshipTablePagination.setPageFactory(this::createPage);
+        pagina=service.createPageForUser(service.getLoggedInUser().getId());
     }
 
     private TableView<User> createTable() {
@@ -96,7 +95,7 @@ public class MainPageController implements Observer<RemoveUserEvent> {
                                 MessagePageController msgPageController = fxmlLoader.getController();
                                 msgPageController.setService(service,data);
 
-                                ((Node) (event.getSource())).getScene().getWindow().hide();
+                                //((Node) (event.getSource())).getScene().getWindow().hide();
                             } catch (IOException ex) {
                                 ex.printStackTrace();
                             }
@@ -138,7 +137,8 @@ public class MainPageController implements Observer<RemoveUserEvent> {
         User selectedUser = tableView.getSelectionModel().getSelectedItem();
         if (selectedUser != null) {
             service.removeFriendship(service.getLoggedInUser(), selectedUser);
-
+            List<FriendRequest> req =new ArrayList<FriendRequest>(StreamSupport.stream(service.getFriendRequests().spliterator(), false).toList());
+            pagina.setCereriDePrietenie(req);
         }
     }
 
@@ -167,9 +167,10 @@ public class MainPageController implements Observer<RemoveUserEvent> {
         tableView.getColumns().add(column3);
         tableView.getColumns().add(column4);
 
-        for (FriendRequest fr : service.getFriendRequests())
+       /* for (FriendRequest fr : service.getFriendRequests())
+            tableView.getItems().add(fr);*/
+        for (FriendRequest fr : pagina.getCereriDePrietenie())
             tableView.getItems().add(fr);
-
 
         VBox vbox = new VBox(tableView);
         //Scene secondScene = new Scene(secondaryLayout, 230, 100);
@@ -257,10 +258,15 @@ public class MainPageController implements Observer<RemoveUserEvent> {
                                 FriendRequest friendRequest = getTableView().getItems().get(getIndex());
                                 service.removeFriendRequest(friendRequest);
                                 ObservableList<FriendRequest> tableModel = FXCollections.observableArrayList();
+                                //TODO !!!!!!!!!!!
                                 Iterable<FriendRequest> friendRequests = service.getSentFriendRequests();
                                 List<FriendRequest> friendRequestList = StreamSupport.stream(friendRequests.spliterator(), false).collect(Collectors.toList());
                                 tableModel.setAll(friendRequestList);
                                 tableView.setItems(tableModel);
+                                //-----------
+                                List<FriendRequest> req =new ArrayList<FriendRequest>(StreamSupport.stream(service.getFriendRequests().spliterator(), false).toList());
+                                pagina.setCereriDePrietenie(req);
+                                //--------
                             });
                             setGraphic(btn);
                             setText(null);
@@ -274,9 +280,12 @@ public class MainPageController implements Observer<RemoveUserEvent> {
         deleteRequestColumn.setCellFactory(deleteRequestFactory);
 
         tableView.getColumns().addAll(toColumn, statusColumn, dateColumn, deleteRequestColumn);
-
+        //TODO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         ObservableList<FriendRequest> tableModel = FXCollections.observableArrayList();
         Iterable<FriendRequest> friendRequests = service.getSentFriendRequests();
+        ///------
+
+        ///-------------
         List<FriendRequest> friendRequestList = StreamSupport.stream(friendRequests.spliterator(), false).collect(Collectors.toList());
         tableModel.setAll(friendRequestList);
         tableView.setItems(tableModel);
