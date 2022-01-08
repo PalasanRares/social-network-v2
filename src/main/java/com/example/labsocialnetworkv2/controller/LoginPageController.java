@@ -1,6 +1,7 @@
 package com.example.labsocialnetworkv2.controller;
 
 import com.example.labsocialnetworkv2.application.Service;
+import com.example.labsocialnetworkv2.domain.Page;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -97,6 +98,7 @@ public class LoginPageController {
 
                 MainPageController mainPageController = fxmlLoader.getController();
                 mainPageController.setService(service);
+               // Page pagina=service.createPageForUser(service.getLoggedInUser().getId());
                 ((Node)(event.getSource())).getScene().getWindow().hide();
             }
             catch (IOException ex) {
