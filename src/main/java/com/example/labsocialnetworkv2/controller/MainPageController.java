@@ -74,7 +74,7 @@ public class MainPageController implements Observer<RemoveUserEvent> {
         Callback<TableColumn<User, Void>, TableCell<User, Void>> cellFactory = new Callback<TableColumn<User, Void>, TableCell<User, Void>>() {
             @Override
             public TableCell<User, Void> call(final TableColumn<User, Void> param) {
-                final TableCell<User, Void> cell = new TableCell<User, Void>() {
+                return new TableCell<User, Void>() {
 
                     private final Button btn = new Button("Message");
 
@@ -112,7 +112,6 @@ public class MainPageController implements Observer<RemoveUserEvent> {
                         }
                     }
                 };
-                return cell;
             }
         };
 
@@ -143,45 +142,20 @@ public class MainPageController implements Observer<RemoveUserEvent> {
     }
 
     @FXML
-    protected void handleRequestButton(ActionEvent actionEvent) {
-
-        Label secondLabel = new Label("Friend Requests:");
-        StackPane secondaryLayout = new StackPane();
-        secondaryLayout.getChildren().add(secondLabel);
-
-
-        TableView tableView = new TableView();
-        tableView.setPlaceholder(new Label("Nu exista cereri de prietenie"));
-
-        TableColumn<FriendRequest, String> column1 = new TableColumn<>("From");
-        column1.setCellValueFactory(new PropertyValueFactory<>("user1"));
-        //TableColumn<FriendRequest, String> column2 = new TableColumn<>("To");
-        //column2.setCellValueFactory(new PropertyValueFactory<>("to"));
-        TableColumn<FriendRequest, String> column3 = new TableColumn<>("Status");
-        column3.setCellValueFactory(new PropertyValueFactory<>("status"));
-        TableColumn<FriendRequest, String> column4 = new TableColumn<>("DataTrimiterii");
-        column4.setCellValueFactory(new PropertyValueFactory<>("dataTrimiterii"));
-
-        tableView.getColumns().add(column1);
-        //tableView.getColumns().add(column2);
-        tableView.getColumns().add(column3);
-        tableView.getColumns().add(column4);
-
-       /* for (FriendRequest fr : service.getFriendRequests())
-            tableView.getItems().add(fr);*/
-        for (FriendRequest fr : pagina.getCereriDePrietenie())
-            tableView.getItems().add(fr);
-
-        VBox vbox = new VBox(tableView);
-        //Scene secondScene = new Scene(secondaryLayout, 230, 100);
-        Scene secondScene = new Scene(vbox, 230, 100);
-
-        Stage newWindow = new Stage();
-        newWindow.setTitle("Second Stage");
-        newWindow.setScene(secondScene);
-
-
-        newWindow.show();
+    protected void handleRequestButton() {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(getClass().getClassLoader().getResource("com/example/labsocialnetworkv2/friend-requests-page.fxml"));
+            AnchorPane friendRequestsPageLayout = fxmlLoader.load();
+            Stage stage = new Stage();
+            stage.setTitle("Friend Requests");
+            stage.setScene(new Scene(friendRequestsPageLayout));
+            stage.show();
+            FriendRequestsPageController searchUserController = fxmlLoader.getController();
+            searchUserController.init(service);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 
 

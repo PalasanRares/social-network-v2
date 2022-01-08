@@ -124,4 +124,8 @@ public class User extends Entity<Integer> {
     public List<User> getFriendsList() {
         return friendsList;
     }
+
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
 }

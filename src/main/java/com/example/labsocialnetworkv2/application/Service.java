@@ -351,6 +351,12 @@ public class Service implements Observable<RemoveUserEvent> {
         }
     }
 
+    public List<FriendRequest> getPendingFriendRequests() {
+        return StreamSupport.stream(friendRequestRepository.findAllForId(new Tuple<>(new User(), loggedInUser)).spliterator(), false)
+                .filter(friendRequest -> friendRequest.getStatus().equals("pending"))
+                .collect(Collectors.toList());
+    }
+
     public Iterable<FriendRequest> getFriendRequests() {
         return friendRequestRepository.findAllForId(new Tuple<>(new User(), loggedInUser));
     }
@@ -377,6 +383,7 @@ public class Service implements Observable<RemoveUserEvent> {
             }
             else {
                 friendshipRepository.save(new Friendship(toAccept.getId()));
+                notifyObservers(new RemoveUserEvent(toAccept.getUser1())); //to change event
             }
         }
         catch (RuntimeException ex) {

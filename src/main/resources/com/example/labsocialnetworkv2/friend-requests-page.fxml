@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="700.0" prefWidth="400.0" style="-fx-background-color: #212129;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.labsocialnetworkv2.controller.FriendRequestsPageController">
+   <children>
+      <TableView fx:id="receivedTableView" layoutX="15.0" layoutY="45.0" prefHeight="300.0" prefWidth="370.0" style="-fx-background-color: #323949; -fx-background-radius: 15 15 0 0;" stylesheets="@css/friend-requests-table.css">
+         <columns>
+            <TableColumn fx:id="receivedUserColumn" prefWidth="99.0" style="-fx-background-color: transparent;" text="User" />
+            <TableColumn fx:id="receivedDateColumn" prefWidth="89.0" style="-fx-background-color: transparent;" text="Date" />
+            <TableColumn fx:id="receivedAcceptColumn" prefWidth="90.0" style="-fx-background-color: transparent;" />
+            <TableColumn fx:id="receivedRejectColumn" prefWidth="90.0" style="-fx-background-color: transparent;" />
+         </columns>
+      </TableView>
+      <TableView fx:id="sentTableView" layoutX="15.0" layoutY="390.0" prefHeight="300.0" prefWidth="370.0" style="-fx-background-color: #323949; -fx-background-radius: 15 15 0 0;" stylesheets="@css/friend-requests-table.css">
+        <columns>
+          <TableColumn fx:id="sentUserColumn" prefWidth="123.0" style="-fx-background-color: transparent;" text="User" />
+          <TableColumn fx:id="sentDateColumn" prefWidth="123.0" style="-fx-background-color: transparent;" text="Date" />
+            <TableColumn fx:id="sentUnsendColumn" prefWidth="122.0" style="-fx-background-color: transparent;" />
+        </columns>
+      </TableView>
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="108.0" prefHeight="47.0" prefWidth="186.0" text="Received Requests" textAlignment="CENTER" textFill="#e8fff5">
+         <font>
+            <Font size="17.0" />
+         </font>
+      </Label>
+      <Label alignment="CENTER" layoutX="139.0" layoutY="356.0" text="Sent Requests" textAlignment="CENTER" textFill="#e8fff5">
+         <font>
+            <Font size="17.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>
