@@ -8,6 +8,7 @@ import com.example.labsocialnetworkv2.repository.ModifiableRepository;
 import com.example.labsocialnetworkv2.repository.PaginatedRepository;
 import com.example.labsocialnetworkv2.repository.Repository;
 import com.example.labsocialnetworkv2.repository.UsernameRepository;
+import com.example.labsocialnetworkv2.repository.db.EventsDbRepository;
 import com.example.labsocialnetworkv2.utils.events.RemoveUserEvent;
 import com.example.labsocialnetworkv2.utils.observer.Observable;
 import com.example.labsocialnetworkv2.utils.observer.Observer;
@@ -36,6 +37,8 @@ public class Service implements Observable<RemoveUserEvent> {
     private final ModifiableRepository<Tuple<User, User>, FriendRequest> friendRequestRepository;
     private User loggedInUser;
     private final ConvRepository<Integer, Message> messageRepository;
+
+    private final EventsDbRepository eventRepository;
     /**
      * Creates an instance of type Services
      * @param friendshipRepository friendshipRepository to be used
@@ -43,12 +46,13 @@ public class Service implements Observable<RemoveUserEvent> {
      * @param messageRepository messageRepository to be used
      */
 
-    public Service(PaginatedRepository<Tuple<User, User>, Friendship> friendshipRepository, UsernameRepository<Integer, User> userRepository, ConvRepository<Integer, Message> messageRepository, ModifiableRepository<Tuple<User, User>, FriendRequest> friendRequestRepository) {
+    public Service(PaginatedRepository<Tuple<User, User>, Friendship> friendshipRepository, UsernameRepository<Integer, User> userRepository, ConvRepository<Integer, Message> messageRepository, ModifiableRepository<Tuple<User, User>, FriendRequest> friendRequestRepository, EventsDbRepository eventRepository) {
 
         this.friendshipRepository = friendshipRepository;
         this.userRepository = userRepository;
         this.messageRepository = messageRepository;
         this.friendRequestRepository = friendRequestRepository;
+        this.eventRepository = eventRepository;
         loggedInUser = null;
     }
 
@@ -472,4 +476,36 @@ public class Service implements Observable<RemoveUserEvent> {
         pagina.setPrieteni(fr);
         return pagina;
     }*/
+
+    public Iterable<Event> findNotifications() {
+        return StreamSupport.stream(eventRepository.findUserEvents(loggedInUser.getId()).spliterator(), false)
+                .filter(event -> (LocalDate.now().plusDays(5).isAfter(event.getEventDate())) && (LocalDate.now().isBefore(event.getEventDate()))).collect(Collectors.toList());
+    }
+
+    public Long getNumberOfNotifications() {
+        return StreamSupport.stream(eventRepository.findUserEvents(loggedInUser.getId()).spliterator(), false)
+                .filter(event -> (LocalDate.now().plusDays(5).isAfter(event.getEventDate())) && (LocalDate.now().isBefore(event.getEventDate()))).count();
+    }
+
+    public Iterable<Event> findSubscribedToEvents() {
+        return eventRepository.findUserEvents(loggedInUser.getId());
+    }
+
+    public void subscribeUserToEvent(Integer eventId) {
+        eventRepository.addUserToEvent(loggedInUser.getId(), eventId, true);
+        notifyObservers(new RemoveUserEvent(loggedInUser));
+    }
+
+    public Iterable<Event> findAllEvents() {
+        return eventRepository.findAll();
+    }
+
+    public void unsubscribeUserToEvent(Integer eventId) {
+        eventRepository.unsubscribeToEvent(loggedInUser.getId(), eventId);
+        notifyObservers(new RemoveUserEvent(loggedInUser));
+    }
+
+    public void addEvent(Event event) {
+        eventRepository.save(event);
+    }
 }

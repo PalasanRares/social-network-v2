@@ -28,7 +28,7 @@ public class MessagePage extends Application {
         FriendRequestDbRepository friendRequestRepository = new FriendRequestDbRepository("jdbc:postgresql://localhost:5432/SocialNetwork", "postgres", "postgres");
         MessagesDbRepository msgRepository = new MessagesDbRepository("jdbc:postgresql://localhost:5432/SocialNetwork", "postgres", "postgres");
 
-        service = new Service(friendshipRepository, userRepository, msgRepository, friendRequestRepository);
+//        service = new Service(friendshipRepository, userRepository, msgRepository, friendRequestRepository);
 
         initView(primaryStage);
         primaryStage.show();

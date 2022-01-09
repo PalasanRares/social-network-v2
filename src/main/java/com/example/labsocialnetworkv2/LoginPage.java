@@ -2,10 +2,7 @@ package com.example.labsocialnetworkv2;
 
 import com.example.labsocialnetworkv2.application.Service;
 import com.example.labsocialnetworkv2.controller.LoginPageController;
-import com.example.labsocialnetworkv2.repository.db.FriendRequestDbRepository;
-import com.example.labsocialnetworkv2.repository.db.FriendshipDbRepository;
-import com.example.labsocialnetworkv2.repository.db.MessagesDbRepository;
-import com.example.labsocialnetworkv2.repository.db.UserDbRepository;
+import com.example.labsocialnetworkv2.repository.db.*;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -19,12 +16,13 @@ public class LoginPage extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-        UserDbRepository userRepository = new UserDbRepository("jdbc:postgresql://localhost:5432/SocialNetwork", "postgres", "postgres");
-        FriendshipDbRepository friendshipRepository = new FriendshipDbRepository("jdbc:postgresql://localhost:5432/SocialNetwork", "postgres", "postgres");
-        FriendRequestDbRepository friendRequestRepository = new FriendRequestDbRepository("jdbc:postgresql://localhost:5432/SocialNetwork", "postgres", "postgres");
-        MessagesDbRepository msgRepository = new MessagesDbRepository("jdbc:postgresql://localhost:5432/SocialNetwork", "postgres", "postgres");
+        UserDbRepository userRepository = new UserDbRepository("jdbc:postgresql://localhost:5432/SocialNetwork", "postgres", "Indiferent1");
+        FriendshipDbRepository friendshipRepository = new FriendshipDbRepository("jdbc:postgresql://localhost:5432/SocialNetwork", "postgres", "Indiferent1");
+        FriendRequestDbRepository friendRequestRepository = new FriendRequestDbRepository("jdbc:postgresql://localhost:5432/SocialNetwork", "postgres", "Indiferent1");
+        MessagesDbRepository msgRepository = new MessagesDbRepository("jdbc:postgresql://localhost:5432/SocialNetwork", "postgres", "Indiferent1");
+        EventsDbRepository eventRepository = new EventsDbRepository("jdbc:postgresql://localhost:5432/SocialNetwork", "postgres", "Indiferent1");
 
-        service = new Service(friendshipRepository, userRepository, msgRepository, friendRequestRepository);
+        service = new Service(friendshipRepository, userRepository, msgRepository, friendRequestRepository, eventRepository);
 
         initView(primaryStage);
         primaryStage.show();

@@ -15,6 +15,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.MapValueFactory;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -33,12 +34,30 @@ public class MainPageController implements Observer<RemoveUserEvent> {
     @FXML
     Pagination friendshipTablePagination;
 
+    @FXML
+    Button notificationsButton;
+    @FXML
+    ImageView notificationsIcon;
+
 
     public void setService(Service service) {
         this.service = service;
         service.addObserver(this);
         friendshipTablePagination.setPageFactory(this::createPage);
+        setNotificationsButton();
         pagina=service.createPageForUser(service.getLoggedInUser().getId());
+    }
+
+    private void setNotificationsButton() {
+        Long numberOfNotifications = service.getNumberOfNotifications();
+        if (numberOfNotifications != 0) {
+            notificationsIcon.setVisible(false);
+            notificationsButton.setText(numberOfNotifications.toString());
+        }
+        else {
+            notificationsIcon.setVisible(true);
+            notificationsButton.setText("");
+        }
     }
 
     private TableView<User> createTable() {
@@ -71,10 +90,10 @@ public class MainPageController implements Observer<RemoveUserEvent> {
     private void addButtonToTable(TableView<User> tableView) {
         TableColumn<User, Void> colBtn = new TableColumn<>("");
 
-        Callback<TableColumn<User, Void>, TableCell<User, Void>> cellFactory = new Callback<TableColumn<User, Void>, TableCell<User, Void>>() {
+        Callback<TableColumn<User, Void>, TableCell<User, Void>> cellFactory = new Callback<>() {
             @Override
             public TableCell<User, Void> call(final TableColumn<User, Void> param) {
-                return new TableCell<User, Void>() {
+                return new TableCell<>() {
 
                     private final Button btn = new Button("Message");
 
@@ -93,7 +112,7 @@ public class MainPageController implements Observer<RemoveUserEvent> {
                                 stage.show();
 
                                 MessagePageController msgPageController = fxmlLoader.getController();
-                                msgPageController.setService(service,data);
+                                msgPageController.setService(service, data);
 
                                 //((Node) (event.getSource())).getScene().getWindow().hide();
                             } catch (IOException ex) {
@@ -128,6 +147,7 @@ public class MainPageController implements Observer<RemoveUserEvent> {
     @Override
     public void update(RemoveUserEvent event) {
         initModel(friendshipTablePagination.getCurrentPageIndex());
+        setNotificationsButton();
     }
 
 
@@ -136,7 +156,7 @@ public class MainPageController implements Observer<RemoveUserEvent> {
         User selectedUser = tableView.getSelectionModel().getSelectedItem();
         if (selectedUser != null) {
             service.removeFriendship(service.getLoggedInUser(), selectedUser);
-            List<FriendRequest> req =new ArrayList<FriendRequest>(StreamSupport.stream(service.getFriendRequests().spliterator(), false).toList());
+            List<FriendRequest> req = new ArrayList<>(StreamSupport.stream(service.getFriendRequests().spliterator(), false).toList());
             pagina.setCereriDePrietenie(req);
         }
     }
@@ -157,7 +177,6 @@ public class MainPageController implements Observer<RemoveUserEvent> {
             ex.printStackTrace();
         }
     }
-
 
     @FXML
     public void handleAddFriendButton() {
@@ -201,77 +220,44 @@ public class MainPageController implements Observer<RemoveUserEvent> {
     }
 
     @FXML
-    public void handleSentFriendRequestsButton() {
-        TableView<FriendRequest> tableView = new TableView<>();
+    public void handleEventsButton() {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(getClass().getClassLoader().getResource("com/example/labsocialnetworkv2/events-page.fxml"));
+            AnchorPane eventsPageLayout = fxmlLoader.load();
+            Stage stage = new Stage();
+            stage.setScene(new Scene(eventsPageLayout));
+            stage.setTitle("Events");
+            stage.show();
 
-        TableColumn<FriendRequest, String> toColumn = new TableColumn<>("To");
-        toColumn.setCellValueFactory(new PropertyValueFactory<>("toId"));
+            EventsPageController eventsPageController = fxmlLoader.getController();
+            eventsPageController.setService(service);
+        }
+        catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
 
-        TableColumn<FriendRequest, String> statusColumn = new TableColumn<>("Status");
-        statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
+    @FXML
+    public void handleNotificationsButton() {
+        Iterable<Event> notifications = service.findNotifications();
+        for (Event event : notifications) {
+            try {
+                FXMLLoader fxmlLoader = new FXMLLoader();
+                fxmlLoader.setLocation(getClass().getClassLoader().getResource("com/example/labsocialnetworkv2/pop-up-page.fxml"));
+                AnchorPane popUpLayout = fxmlLoader.load();
+                Stage stage = new Stage();
+                stage.setScene(new Scene(popUpLayout));
+                stage.setTitle("Notification");
+                stage.show();
 
-        TableColumn<FriendRequest, String> dateColumn = new TableColumn<>("Date");
-        dateColumn.setCellValueFactory(new PropertyValueFactory<>("dataTrimiterii"));
-
-        TableColumn<FriendRequest, String> deleteRequestColumn = new TableColumn<>("Delete Request");
-
-        Callback<TableColumn<FriendRequest, String>, TableCell<FriendRequest, String>> deleteRequestFactory = new Callback<>() {
-            @Override
-            public TableCell<FriendRequest, String> call(TableColumn<FriendRequest, String> param) {
-                final TableCell<FriendRequest, String> cell = new TableCell<>() {
-                    final Button btn = new Button("Delete Request");
-
-                    @Override
-                    public void updateItem(String item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (empty) {
-                            setGraphic(null);
-                            setText(null);
-                        } else {
-                            btn.setOnAction(event -> {
-                                FriendRequest friendRequest = getTableView().getItems().get(getIndex());
-                                service.removeFriendRequest(friendRequest);
-                                ObservableList<FriendRequest> tableModel = FXCollections.observableArrayList();
-                                //TODO !!!!!!!!!!!
-                                Iterable<FriendRequest> friendRequests = service.getSentFriendRequests();
-                                List<FriendRequest> friendRequestList = StreamSupport.stream(friendRequests.spliterator(), false).collect(Collectors.toList());
-                                tableModel.setAll(friendRequestList);
-                                tableView.setItems(tableModel);
-                                //-----------
-                                List<FriendRequest> req =new ArrayList<FriendRequest>(StreamSupport.stream(service.getFriendRequests().spliterator(), false).toList());
-                                pagina.setCereriDePrietenie(req);
-                                //--------
-                            });
-                            setGraphic(btn);
-                            setText(null);
-                        }
-                    }
-                };
-                return cell;
+                PopUpPageController popUpPageController = fxmlLoader.getController();
+                popUpPageController.setErrorText("You have this upcoming event: " + event.toString());
             }
-        };
-
-        deleteRequestColumn.setCellFactory(deleteRequestFactory);
-
-        tableView.getColumns().addAll(toColumn, statusColumn, dateColumn, deleteRequestColumn);
-        //TODO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        ObservableList<FriendRequest> tableModel = FXCollections.observableArrayList();
-        Iterable<FriendRequest> friendRequests = service.getSentFriendRequests();
-        ///------
-
-        ///-------------
-        List<FriendRequest> friendRequestList = StreamSupport.stream(friendRequests.spliterator(), false).collect(Collectors.toList());
-        tableModel.setAll(friendRequestList);
-        tableView.setItems(tableModel);
-
-        VBox vbox = new VBox(tableView);
-        Scene secondScene = new Scene(vbox, 400, 300);
-
-        Stage newWindow = new Stage();
-        newWindow.setTitle("Manage Friend Requests");
-        newWindow.setScene(secondScene);
-
-        newWindow.show();
+            catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
     }
 
     void initModel(int pageIndex) {

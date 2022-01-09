@@ -27,11 +27,11 @@ public class Main {
         ModifiableRepository<Tuple<User, User>, FriendRequest> friendRequestRepository = new FriendRequestDbRepository("jdbc:postgresql://localhost:5432/SocialNetwork", "postgres", "postgres");
         ConvRepository<Integer, Message> msgRepository = new MessagesDbRepository("jdbc:postgresql://localhost:5432/SocialNetwork", "postgres", "postgres");
 
-        Service service = new Service(friendshipRepository, userRepository, msgRepository, friendRequestRepository);
-
-
-       UI ui = new UI(service);
-       ui.runUI();
+//        Service service = new Service(friendshipRepository, userRepository, msgRepository, friendRequestRepository);
+//
+//
+//       UI ui = new UI(service);
+//       ui.runUI();
 
 //        System.out.println("printing msgs");
 //        Repository<Integer, Message> msgRepository = new MessagesDbRepository("jdbc:postgresql://localhost:5432/SocialNetwork", "postgres", "postgres");
