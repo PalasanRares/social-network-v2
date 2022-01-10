@@ -273,4 +273,22 @@ public class MainPageController implements Observer<RemoveUserEvent> {
 
     }
 
+    public void handleRap2Button(ActionEvent actionEvent) {
+
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(getClass().getClassLoader().getResource("com/example/labsocialnetworkv2/raport1-page.fxml"));
+            AnchorPane eventsPageLayout = fxmlLoader.load();
+            Stage stage = new Stage();
+            stage.setScene(new Scene(eventsPageLayout));
+            stage.setTitle("Events");
+            stage.show();
+
+            Raport1PageController eventsPageController = fxmlLoader.getController();
+            eventsPageController.setService(service);
+        }
+        catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
 }

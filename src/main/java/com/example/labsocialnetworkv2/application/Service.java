@@ -508,4 +508,14 @@ public class Service implements Observable<RemoveUserEvent> {
     public void addEvent(Event event) {
         eventRepository.save(event);
     }
+
+    public Iterable<Message> getReceivedMessages(String username, LocalDate startDate, LocalDate endDate) {
+        if(username==null)throw new NullPointerException("username can't be null");
+        User u=userRepository.getByUsername(username);
+        if(u==null||u==loggedInUser)throw new UserNotFoundException("user does not exist");
+        if(startDate==null||endDate==null)throw new NullPointerException("date cannot be null");
+        List<Message> ar=messageRepository.getReceivedMessagesPeriod(getLoggedInUser().getId(),u.getId(),startDate,endDate);
+        Collections.sort(ar, new Sortbydate());
+        return ar;
+    }
 }
