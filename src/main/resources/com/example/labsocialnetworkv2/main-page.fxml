@@ -57,12 +57,14 @@
                <Font size="17.0" />
             </font></Button>
         
-          <Button alignment="CENTER" mnemonicParsing="false" onAction="#handleAddFriendButton" prefHeight="80.0" prefWidth="131.0" style="-fx-background-color: #323949; -fx-background-radius: 15;" />
-         <ImageView fitHeight="68.0" fitWidth="146.0" pickOnBounds="true" preserveRatio="true">
-            <image>
-               <Image url="@icons/AddFriendIcon.png" />
-            </image>
-         </ImageView>
+          <Button alignment="CENTER" mnemonicParsing="false" onAction="#handleAddFriendButton" prefHeight="80.0" prefWidth="131.0" style="-fx-background-color: #323949; -fx-background-radius: 15;">
+            <graphic>
+               <ImageView fitHeight="68.0" fitWidth="146.0" pickOnBounds="true" preserveRatio="true">
+                  <image>
+                     <Image url="@icons/AddFriendIcon.png" />
+                  </image>
+               </ImageView>
+            </graphic></Button>
          <Button fx:id="rap1" alignment="CENTER" mnemonicParsing="false" onAction="#handleRap1Button" prefHeight="80.0" prefWidth="131.0" style="-fx-background-color: #323949; -fx-background-radius: 15;" text="Raport1" textAlignment="CENTER" textFill="#e8fff5" wrapText="true" GridPane.rowIndex="3">
             <font>
                <Font size="17.0" />
