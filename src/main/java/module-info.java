@@ -6,6 +6,7 @@ module com.example.labsocialnetworkv2 {
     requires com.dlsc.formsfx;
     requires org.kordamp.bootstrapfx.core;
     requires java.sql;
+    requires org.apache.pdfbox;
 
     opens com.example.labsocialnetworkv2 to javafx.fxml;
     opens com.example.labsocialnetworkv2.controller to javafx.fxml;

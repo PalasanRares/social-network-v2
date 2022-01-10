@@ -21,6 +21,15 @@ import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDType1CFont;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
+
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 
 import java.security.SecureRandom;
@@ -537,5 +546,69 @@ public class Service implements Observable<RemoveUserEvent> {
         List<Message> ar=messageRepository.getReceivedMessagesPeriod(getLoggedInUser().getId(),u.getId(),startDate,endDate);
         Collections.sort(ar, new Sortbydate());
         return ar;
+    }
+
+    public void saveActivityReportToPDF(String path, String fileName, LocalDate startDate, LocalDate endDate) {
+        if (!fileName.equals("") && !path.equals("")) {
+            PDDocument document = new PDDocument();
+            Path pathToFile = Paths.get(path, fileName);
+            try {
+                Iterable<User> friendships = getFriendshipsForActivityReport(startDate, endDate);
+                Iterable<Message> messages = getMessagesForActivityReport(startDate, endDate);
+                PDPage page1 = new PDPage();
+                PDPage page2 = new PDPage();
+                document.addPage(page1);
+                document.addPage(page2);
+                PDPageContentStream contentStream = new PDPageContentStream(document, page1);
+                contentStream.setFont(PDType1Font.TIMES_ROMAN, 16);
+                contentStream.setLeading(14.5f);
+                contentStream.beginText();
+                contentStream.newLineAtOffset(25, 725);
+                for (User user : friendships) {
+                    contentStream.showText(user.toString());
+                    contentStream.newLine();
+                }
+                contentStream.endText();
+                contentStream.close();
+                contentStream = new PDPageContentStream(document, page2);
+                contentStream.setFont(PDType1Font.TIMES_ROMAN, 16);
+                contentStream.setLeading(14.5f);
+                contentStream.beginText();
+                contentStream.newLineAtOffset(25, 725);
+                for (Message message : messages) {
+                    contentStream.showText(message.toString());
+                    contentStream.newLine();
+                }
+                contentStream.endText();
+                contentStream.close();
+                document.save(pathToFile.toString());
+                document.close();
+            }
+            catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    private Iterable<User> getFriendshipsForActivityReport(LocalDate startDate, LocalDate endDate) {
+        return StreamSupport.stream(findAllFriendships().spliterator(), false)
+                .filter(friendship -> (friendship.getId().getFirst().equals(loggedInUser) || friendship.getId().getSecond().equals(loggedInUser)) && friendship.getDate().isAfter(startDate) && friendship.getDate().isBefore(endDate))
+                .map(friendship -> {
+                    if (friendship.getId().getFirst().equals(loggedInUser)) {
+                        return friendship.getId().getSecond();
+                    }
+                    if (friendship.getId().getSecond().equals(loggedInUser)) {
+                        return friendship.getId().getFirst();
+                    }
+                    return null;
+                })
+                .collect(Collectors.toList());
+    }
+
+    private Iterable<Message> getMessagesForActivityReport(LocalDate startDate, LocalDate endDate) {
+        Iterable<Message> allMessages = messageRepository.findAll();
+        return StreamSupport.stream(allMessages.spliterator(), false)
+                .filter(message -> message.getData().isAfter(startDate) && message.getData().isBefore(endDate) && message.getReceivers().contains(loggedInUser))
+                .collect(Collectors.toList());
     }
 }

@@ -74,12 +74,6 @@ public class Message extends Entity<Integer>{
 
     @Override
     public String toString() {
-        return "Message{" +
-                "sender=" + sender +
-                ", receivers=" + receivers +
-                ", message='" + message + '\'' +
-                ", data=" + data +
-                ", reply=" + reply +
-                '}';
+        return message + " from: " + sender.getFullName() + " date: " + data;
     }
 }
