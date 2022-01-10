@@ -33,6 +33,7 @@ import javafx.util.Callback;
 import javafx.util.StringConverter;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -108,7 +109,7 @@ public class SignUpPageController{
         }
     }
     @FXML
-    public void handleSignUpButton(ActionEvent event) {
+    public void handleSignUpButton(ActionEvent event) throws NoSuchAlgorithmException {
         String username = userName.getText();
         String pas = password.getText();
         String firstname = firstName.getText();

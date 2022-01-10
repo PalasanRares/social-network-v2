@@ -12,6 +12,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 
 public class LoginPageController {
     private Service service;
@@ -59,7 +60,7 @@ public class LoginPageController {
         model.setAll(userList);*/
     }
 
-    public void handleLoginButton(ActionEvent event) {
+    public void handleLoginButton(ActionEvent event) throws NoSuchAlgorithmException {
         String use;
         String pass;
         try {

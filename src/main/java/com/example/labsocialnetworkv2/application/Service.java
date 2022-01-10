@@ -17,9 +17,16 @@ import com.example.labsocialnetworkv2.validator.exception.MessageNotFoundExcepti
 import com.example.labsocialnetworkv2.validator.exception.UserNotFoundException;
 import com.example.labsocialnetworkv2.validator.exception.ValidationException;
 
+import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
 
+import java.security.SecureRandom;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -173,6 +180,8 @@ public class Service implements Observable<RemoveUserEvent> {
      */
     public void addUser(String[] args) {
         User user = new User(args[0], args[1],args[2], args[3], LocalDate.parse(args[4], DateFormatter.STANDARD_DATE_FORMAT));
+
+
         userRepository.save(user);
     }
     /**
@@ -313,7 +322,7 @@ public class Service implements Observable<RemoveUserEvent> {
              .collect(Collectors.toList());
     }
 
-    public boolean loginUser(String username,String password) {
+    public boolean loginUser(String username,String password) throws NoSuchAlgorithmException {
         if (username == null || password == null) {
             return false;
         }
@@ -322,8 +331,19 @@ public class Service implements Observable<RemoveUserEvent> {
         if (foundUser == null ) {
             return false;
         }
-        if(!foundUser.getPassword().equals(password))
+
+        String salt =userRepository.getSalt(foundUser.getId());
+        salt = salt + password;
+        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+        byte[] hash = digest.digest(salt.getBytes(StandardCharsets.UTF_8));//-----------
+        BigInteger no = new BigInteger(1, hash);
+        String hashtext = no.toString(16);
+
+
+
+        if(!foundUser.getPassword().equals(hashtext))
             return false;
+        foundUser.setPassword(hashtext);
         loggedInUser = foundUser;
         return true;
     }
