@@ -3,6 +3,7 @@ package com.example.labsocialnetworkv2.presentation;
 import com.example.labsocialnetworkv2.application.Service;
 import com.example.labsocialnetworkv2.domain.*;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
@@ -143,7 +144,7 @@ public class UI {
 
     }
 
-    private void uiLogin(String username,String password) {
+    private void uiLogin(String username,String password) throws NoSuchAlgorithmException {
         if (!service.loginUser(username,password)) {
             System.out.println("Ups, something went wrong with logging you in");
         }
@@ -183,7 +184,7 @@ public class UI {
     /**
      * Runs the console user interface
      */
-    public void runUI() {
+    public void runUI() throws NoSuchAlgorithmException {
         Scanner scanner = new Scanner(System.in);
         boolean uiRunning = true;
         while (uiRunning) {
