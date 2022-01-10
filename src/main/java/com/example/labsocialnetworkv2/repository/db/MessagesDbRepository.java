@@ -109,6 +109,7 @@ public class MessagesDbRepository implements ConvRepository<Integer, Message> {
         }
         return messages;
     }
+
     public void removeReceivers(Integer msgId){
         String sql = "DELETE FROM \"MessagesUsers\" WHERE \"MessageId\" =?;";
         try (Connection connection = DriverManager.getConnection(url, username, password);

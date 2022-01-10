@@ -63,7 +63,7 @@
                <Image url="@icons/AddFriendIcon.png" />
             </image>
          </ImageView>
-         <Button fx:id="rap1" alignment="CENTER" mnemonicParsing="false" prefHeight="80.0" prefWidth="131.0" style="-fx-background-color: #323949; -fx-background-radius: 15;" text="Raport1" textAlignment="CENTER" textFill="#e8fff5" wrapText="true" GridPane.rowIndex="3">
+         <Button fx:id="rap1" alignment="CENTER" mnemonicParsing="false" onAction="#handleRap1Button" prefHeight="80.0" prefWidth="131.0" style="-fx-background-color: #323949; -fx-background-radius: 15;" text="Raport1" textAlignment="CENTER" textFill="#e8fff5" wrapText="true" GridPane.rowIndex="3">
             <font>
                <Font size="17.0" />
             </font>
