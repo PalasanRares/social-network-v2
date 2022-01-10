@@ -80,6 +80,35 @@ public class MessagesDbRepository implements ConvRepository<Integer, Message> {
             e.printStackTrace();
         }
     }
+    public List<Message> getReceivedMessagesPeriod(Integer loggedinid,Integer id,LocalDate startDate,LocalDate endDate){
+        List<Message> messages = new ArrayList<>();
+        String sql ="Select e.\"Id\" ,e.\"SenderId\",e.\"Message\",e.\"SendingDate\",e.\"ReplyTo\" from \"Messages\" e INNER JOIN \"MessagesUsers\" mu on e.\"Id\"=mu.\"MessageId\" WHERE (e.\"SenderId\" =? AND mu.\"UserId\" = ?)AND(e.\"SendingDate\" > ?)AND (e.\"SendingDate\" < ?)  ";
+        try (Connection connection = DriverManager.getConnection(url, username, password);
+             PreparedStatement ps = connection.prepareStatement(sql) ){
+            ps.setInt(1,id);
+            ps.setInt(2,loggedinid);
+            ps.setDate(3, Date.valueOf(startDate));
+            ps.setDate(4, Date.valueOf(endDate));
+            ResultSet resultSet = ps.executeQuery();
+            while (resultSet.next()) {
+                Integer id1 = resultSet.getInt("Id");
+                Integer sid = resultSet.getInt("SenderId");
+
+                String msg = resultSet.getString("Message");
+                LocalDate day = resultSet.getDate("SendingDate").toLocalDate();
+                Integer reply = resultSet.getInt("ReplyTo");
+
+                List<User> receivers = getReceiversList(id);
+                Message message = new Message(getSender(sid),receivers,msg,day,findOne(reply));
+                message.setId(id1);
+                messages.add(message);
+            }
+            return messages;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return messages;
+    }
     public void removeReceivers(Integer msgId){
         String sql = "DELETE FROM \"MessagesUsers\" WHERE \"MessageId\" =?;";
         try (Connection connection = DriverManager.getConnection(url, username, password);

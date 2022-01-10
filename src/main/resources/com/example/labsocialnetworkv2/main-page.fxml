@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="anp" prefHeight="400.0" prefWidth="709.0" style="-fx-background-color: #212129;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.labsocialnetworkv2.controller.MainPageController">
+<AnchorPane fx:id="anp" prefHeight="497.0" prefWidth="709.0" style="-fx-background-color: #212129;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.labsocialnetworkv2.controller.MainPageController">
     <Button alignment="CENTER" layoutX="210.0" layoutY="335.0" mnemonicParsing="false" onAction="#handleRemoveButton" style="-fx-background-color: #3d3e51; -fx-background-radius: 15;" text="Remove" textAlignment="CENTER" textFill="#e8fff5">
       <font>
          <Font size="17.0" />
@@ -25,14 +25,16 @@
          <URL value="@css/pagination.css" />
          <URL value="@css/friend-requests-table.css" />
       </stylesheets></Pagination>
-   <GridPane alignment="CENTER" layoutX="505.0" prefHeight="400.0" prefWidth="190.0" style="-fx-padding: 15 0;">
+   <GridPane alignment="CENTER" layoutX="504.0" prefHeight="486.0" prefWidth="190.0" style="-fx-padding: 15 0;">
      <columnConstraints>
        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
      </columnConstraints>
      <rowConstraints>
+         <RowConstraints maxHeight="137.0" minHeight="10.0" prefHeight="81.0" vgrow="SOMETIMES" />
        <RowConstraints maxHeight="137.0" minHeight="10.0" prefHeight="81.0" vgrow="SOMETIMES" />
        <RowConstraints maxHeight="99.0" minHeight="0.0" prefHeight="81.0" vgrow="SOMETIMES" />
        <RowConstraints maxHeight="151.0" minHeight="10.0" prefHeight="81.0" vgrow="SOMETIMES" />
+         <RowConstraints maxHeight="107.0" minHeight="10.0" prefHeight="81.0" vgrow="SOMETIMES" />
          <RowConstraints maxHeight="107.0" minHeight="10.0" prefHeight="81.0" vgrow="SOMETIMES" />
      </rowConstraints>
       <children>
@@ -42,7 +44,7 @@
                <Font size="17.0" />
             </font>
          </Button>
-         <Button alignment="CENTER" mnemonicParsing="false" onAction="#handleLogoutButton" prefHeight="80.0" prefWidth="131.0" style="-fx-background-color: #323949; -fx-background-radius: 15;" GridPane.rowIndex="3">
+         <Button alignment="CENTER" mnemonicParsing="false" onAction="#handleLogoutButton" prefHeight="80.0" prefWidth="131.0" style="-fx-background-color: #323949; -fx-background-radius: 15;" GridPane.rowIndex="5">
             <graphic>
                <ImageView fitHeight="76.0" fitWidth="145.0" pickOnBounds="true" preserveRatio="true">
                   <image>
@@ -55,14 +57,22 @@
                <Font size="17.0" />
             </font></Button>
         
-          <Button alignment="CENTER" mnemonicParsing="false" onAction="#handleAddFriendButton" prefHeight="80.0" prefWidth="131.0" style="-fx-background-color: #323949; -fx-background-radius: 15;">
-            <graphic>
-               <ImageView fitHeight="68.0" fitWidth="146.0" pickOnBounds="true" preserveRatio="true">
-                  <image>
-                     <Image url="@icons/AddFriendIcon.png" />
-                  </image>
-               </ImageView>
-            </graphic></Button>
+          <Button alignment="CENTER" mnemonicParsing="false" onAction="#handleAddFriendButton" prefHeight="80.0" prefWidth="131.0" style="-fx-background-color: #323949; -fx-background-radius: 15;" />
+         <ImageView fitHeight="68.0" fitWidth="146.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+               <Image url="@icons/AddFriendIcon.png" />
+            </image>
+         </ImageView>
+         <Button fx:id="rap1" alignment="CENTER" mnemonicParsing="false" prefHeight="80.0" prefWidth="131.0" style="-fx-background-color: #323949; -fx-background-radius: 15;" text="Raport1" textAlignment="CENTER" textFill="#e8fff5" wrapText="true" GridPane.rowIndex="3">
+            <font>
+               <Font size="17.0" />
+            </font>
+         </Button>
+         <Button fx:id="rap2" alignment="CENTER" layoutX="40.0" layoutY="253.0" mnemonicParsing="false" onAction="#handleRap2Button" prefHeight="80.0" prefWidth="131.0" style="-fx-background-color: #323949; -fx-background-radius: 15;" text="Raport2" textAlignment="CENTER" textFill="#e8fff5" wrapText="true" GridPane.rowIndex="4">
+            <font>
+               <Font size="17.0" />
+            </font>
+         </Button>
       </children>
    </GridPane>
    <Button fx:id="notificationsButton" contentDisplay="CENTER" layoutX="14.0" layoutY="332.0" mnemonicParsing="false" onAction="#handleNotificationsButton" prefHeight="33.0" prefWidth="40.0" style="-fx-background-color: #323949; -fx-background-radius: 15;" textFill="#e8fff5">
