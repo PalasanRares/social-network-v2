@@ -303,8 +303,9 @@ public class MainPageController implements Observer<RemoveUserEvent> {
             stage.setTitle("Events");
             stage.show();
 
-            Raport1PageController eventsPageController = fxmlLoader.getController();
-            eventsPageController.setService(service);
+            Raport1PageController messageReportPageController = fxmlLoader.getController();
+            messageReportPageController.setService(service);
+            messageReportPageController.setStage(stage);
         }
         catch (IOException ex) {
             ex.printStackTrace();

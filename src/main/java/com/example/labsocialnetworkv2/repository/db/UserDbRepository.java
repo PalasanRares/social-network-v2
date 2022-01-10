@@ -142,7 +142,7 @@ public class UserDbRepository implements UsernameRepository<Integer, User> {
     public Iterable<User> findAll() {
         Set<User> users = new HashSet<>();
         try (Connection connection = DriverManager.getConnection(url, username, password);
-             PreparedStatement statement = connection.prepareStatement("SELECT \"username\",\"password\",\"FirstName\", \"LastName\", \"Birthday\" from \"Users\"");
+             PreparedStatement statement = connection.prepareStatement("SELECT * from \"Users\"");
              ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {
                 Integer id = resultSet.getInt("UserId");

@@ -48,8 +48,8 @@ public class MessagePageController  { //TODO: de vazut cum fac cu Observer
     private VBox vboxMsg;
     @FXML
     private ScrollPane scpn;
-    @FXML
-    private Button goBack;
+   /* @FXML
+    private Button goBack;*/
     @FXML
     private Button sendButton;
     @FXML
@@ -94,6 +94,7 @@ public class MessagePageController  { //TODO: de vazut cum fac cu Observer
                 EventHandler<MouseEvent> mouseEventHandler
                         = e ->{ msgSelected=msg;
                 Button btn =new Button("Reply to:"+ msg.getMessage()+" X");
+                btn.setStyle("-fx-background-color: #323949; "+"-fx-background-radius: 15;"+"-fx-text-fill: #e8fff5");
                 replyArea.getChildren().clear();
                     btn.setOnAction(evt -> {replyArea.getChildren().clear();msgSelected=null;});
                 replyArea.getChildren().add(btn);
@@ -144,6 +145,7 @@ public class MessagePageController  { //TODO: de vazut cum fac cu Observer
                 EventHandler<MouseEvent> mouseEventHandler
                         = e -> { msgSelected=msg;
                 Button btn =new Button("Reply to:"+ msg.getMessage()+" X");
+                    btn.setStyle("-fx-background-color: #323949; "+"-fx-background-radius: 15;"+"-fx-text-fill: #e8fff5");
                 replyArea.getChildren().clear();
                     btn.setOnAction(evt -> {replyArea.getChildren().clear();msgSelected=null;});
                 replyArea.getChildren().add(btn);
@@ -179,7 +181,7 @@ public class MessagePageController  { //TODO: de vazut cum fac cu Observer
         }
 
     }
-    @FXML
+   /* @FXML
     public void handleGoBackButton(ActionEvent event) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();
@@ -197,7 +199,7 @@ public class MessagePageController  { //TODO: de vazut cum fac cu Observer
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-    }
+    }*/
     @FXML
     public void handleSendButton() {
         String value = msgField.getText();

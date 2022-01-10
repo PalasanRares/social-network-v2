@@ -611,4 +611,33 @@ public class Service implements Observable<RemoveUserEvent> {
                 .filter(message -> message.getData().isAfter(startDate) && message.getData().isBefore(endDate) && message.getReceivers().contains(loggedInUser))
                 .collect(Collectors.toList());
     }
+    public void saveMessageReportToPDF(String path, String fileName, LocalDate startDate, LocalDate endDate,String username) {
+        if (!fileName.equals("") && !path.equals("")) {
+            PDDocument document = new PDDocument();
+            Path pathToFile = Paths.get(path, fileName);
+            try {
+                Iterable<Message> messages =getReceivedMessages(username,startDate,endDate);
+                PDPage page1 = new PDPage();
+                document.addPage(page1);
+
+                PDPageContentStream contentStream = new PDPageContentStream(document, page1);
+                contentStream.setFont(PDType1Font.TIMES_ROMAN, 16);
+                contentStream.setLeading(14.5f);
+                contentStream.beginText();
+                contentStream.newLineAtOffset(25, 725);
+                for (Message msg : messages) {
+                    contentStream.showText(msg.toString());
+                    contentStream.newLine();
+                }
+                contentStream.endText();
+                contentStream.close();
+                document.save(pathToFile.toString());
+                document.close();
+            }
+            catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
 }

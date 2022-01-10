@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="500.0" prefWidth="400.0" style="-fx-background-color: #212129;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.labsocialnetworkv2.controller.Raport1PageController">
+<AnchorPane prefHeight="500.0" prefWidth="506.0" style="-fx-background-color: #212129;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.labsocialnetworkv2.controller.Raport1PageController">
     <children>
         <Label alignment="CENTER" layoutX="67.0" layoutY="14.0" prefHeight="34.0" prefWidth="117.0" text="See messages" textAlignment="CENTER" textFill="#e8fff5">
             <font>
@@ -22,23 +22,28 @@
             </font>
         </TextField>
         <DatePicker fx:id="startDateDatePicker" layoutX="14.0" layoutY="93.0" prefHeight="33.0" prefWidth="251.0" promptText="Start date" style="-fx-background-color: #323949;" stylesheets="@css/date-picker.css" />
-        <Button layoutX="281.0" layoutY="137.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="110.0" style="-fx-background-color: #323949; -fx-background-radius: 15;" text="Save to Pdf" textFill="#e8fff5">
+        <Button fx:id="savePdf" layoutX="281.0" layoutY="137.0" mnemonicParsing="false" onAction="#handleCreatePdfButton" prefHeight="38.0" prefWidth="110.0" style="-fx-background-color: #323949; -fx-background-radius: 15;" text="Save to Pdf" textFill="#e8fff5">
             <font>
                 <Font size="17.0" />
             </font>
         </Button>
-        <TableView fx:id="tableView" layoutX="23.0" layoutY="191.0" prefHeight="295.0" prefWidth="356.0" stylesheets="@css/friend-requests-table.css">
+        <TableView fx:id="tableView" layoutX="23.0" layoutY="191.0" prefHeight="295.0" prefWidth="454.0" stylesheets="@css/friend-requests-table.css">
             <columns>
-                <TableColumn fx:id="messageColumn" prefWidth="118.0" text="Message" />
-                <TableColumn fx:id="dateColumn" prefWidth="118.0" text="Date" />
-                <TableColumn fx:id="replyColumn" prefWidth="118.0" text="ReplyTo" />
+                <TableColumn fx:id="messageColumn" prefWidth="183.20001602172852" text="Message" />
+                <TableColumn fx:id="dateColumn" prefWidth="139.19993591308594" text="Date" />
+                <TableColumn fx:id="replyColumn" prefWidth="130.4000244140625" text="ReplyTo" />
             </columns>
         </TableView>
       <DatePicker fx:id="endDateDatePicker" layoutX="14.0" layoutY="137.0" prefHeight="33.0" prefWidth="251.0" promptText="End date" style="-fx-background-color: #323949;" stylesheets="@css/date-picker.css" />
-      <Button id="searchButton" layoutX="281.0" layoutY="92.0" mnemonicParsing="false" onAction="#handleSearchButton" prefHeight="38.0" prefWidth="110.0" style="-fx-background-color: #323949; -fx-background-radius: 15;" text="Search" textFill="#e8fff5">
+      <Button id="searchButton" layoutX="281.0" layoutY="47.0" mnemonicParsing="false" onAction="#handleSearchButton" prefHeight="38.0" prefWidth="110.0" style="-fx-background-color: #323949; -fx-background-radius: 15;" text="Search" textFill="#e8fff5">
          <font>
             <Font size="17.0" />
          </font>
       </Button>
+      <TextField fx:id="fileName" layoutX="282.0" layoutY="93.0" prefHeight="38.0" prefWidth="197.0" promptText="File name" style="-fx-background-color: #323949; -fx-background-radius: 15; -fx-text-fill: #e8fff5;">
+         <font>
+            <Font size="17.0" />
+         </font>
+      </TextField>
     </children>
 </AnchorPane>

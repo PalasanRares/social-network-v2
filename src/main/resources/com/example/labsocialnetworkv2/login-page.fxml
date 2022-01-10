@@ -5,19 +5,21 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.paint.Color?>
-<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.RadialGradient?>
 <?import javafx.scene.paint.Stop?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="519.0" style="-fx-background-color: DIMGRAY;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.labsocialnetworkv2.controller.LoginPageController">
-    <Label alignment="CENTER" contentDisplay="CENTER" layoutX="-1.0" layoutY="35.0" prefHeight="55.0" prefWidth="600.0" text="Social Network">
+<AnchorPane prefHeight="400.0" prefWidth="519.0" style="-fx-background-color: #4c5265;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.labsocialnetworkv2.controller.LoginPageController">
+    <Label alignment="CENTER" contentDisplay="CENTER" layoutY="14.0" prefHeight="55.0" prefWidth="600.0" text="SpiderWEB">
         <font>
-          <Font size="50.0" />
+          <Font size="96.0" />
         </font>
       <textFill>
-         <LinearGradient cycleMethod="REFLECT" endX="1.0" endY="1.0" startY="0.12121212166367146">
+         <RadialGradient centerX="0.5" centerY="0.5" cycleMethod="REFLECT" radius="0.5">
             <stops>
                <Stop>
                   <color>
@@ -26,27 +28,36 @@
                </Stop>
                <Stop offset="1.0">
                   <color>
-                     <Color red="1.0" green="1.0" blue="1.0" />
+                     <Color red="0.10233917832374573" green="0.11038012057542801" blue="0.2631579041481018" />
                   </color>
                </Stop>
             </stops>
-         </LinearGradient>
+         </RadialGradient>
       </textFill>
     </Label>
-    <Button fx:id="buttonLogin" layoutX="271.0" layoutY="251.0" mnemonicParsing="false" onAction="#handleLoginButton" text="Login" textFill="#273d8f">
-      <font>
-         <Font name="Comic Sans MS Bold Italic" size="15.0" />
-      </font></Button>
-    <TextField fx:id="textFieldUsername" layoutX="224.0" layoutY="148.0" />
-    <Label layoutX="135.0" layoutY="148.0" text="Username" textFill="WHITE">
+    <TextField fx:id="textFieldUsername" layoutX="225.0" layoutY="170.0" style="-fx-background-color: #323949; -fx-background-radius: 15; -fx-text-fill: #e8fff5;" />
+    <Label layoutX="134.0" layoutY="171.0" text="Username" textFill="WHITE">
       <font>
          <Font name="Comic Sans MS Bold Italic" size="15.0" />
       </font></Label>
-   <Label layoutX="135.0" layoutY="195.0" text="Password" textFill="WHITE">
+   <Label layoutX="136.0" layoutY="220.0" text="Password" textFill="WHITE">
       <font>
          <Font name="Comic Sans MS Bold Italic" size="15.0" />
       </font>
    </Label>
-   <PasswordField fx:id="textFieldPassword" layoutX="225.0" layoutY="193.0" />
-   <Hyperlink fx:id="signUp" layoutX="274.0" layoutY="297.0" onAction="#goSignUp" text="Sign Up" textFill="WHITE" />
+   <PasswordField fx:id="textFieldPassword" layoutX="225.0" layoutY="218.0" style="-fx-background-color: #323949; -fx-background-radius: 15; -fx-text-fill: #e8fff5;" />
+   <Hyperlink fx:id="signUp" layoutX="257.0" layoutY="331.0" onAction="#goSignUp" text="Sign Up" textFill="WHITE">
+      <font>
+         <Font size="20.0" />
+      </font></Hyperlink>
+   <ImageView fitHeight="142.0" fitWidth="150.0" layoutX="375.0" layoutY="51.0" pickOnBounds="true" preserveRatio="true">
+      <image>
+         <Image url="@../media/spider.gif" />
+      </image>
+   </ImageView>
+   <Button fx:id="buttonLogin" alignment="CENTER" layoutX="234.0" layoutY="265.0" mnemonicParsing="false" onAction="#handleLoginButton" prefHeight="55.0" prefWidth="131.0" style="-fx-background-color: #323949; -fx-background-radius: 15;" text="Login" textAlignment="CENTER" textFill="#e8fff5" wrapText="true">
+      <font>
+         <Font size="17.0" />
+      </font>
+   </Button>
 </AnchorPane>
