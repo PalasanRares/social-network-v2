@@ -45,14 +45,16 @@
        <Button fx:id="goBack" layoutX="502.0" layoutY="29.0" mnemonicParsing="false" onAction="#handleGoBackButton">
          <font>
             <Font size="11.0" />
-         </font></Button>
+         </font>
+         <graphic>
+            <ImageView fitHeight="24.0" fitWidth="33.0" preserveRatio="true">
+               <Image url="@../media/goBack.jpg" />
+            </ImageView>
+         </graphic></Button>
       <Button fx:id="signUp" alignment="CENTER" layoutX="235.0" layoutY="423.0" mnemonicParsing="false" onAction="#handleSignUpButton" prefHeight="55.0" prefWidth="131.0" style="-fx-background-color: #323949; -fx-background-radius: 15;" text="Sign Up" textAlignment="CENTER" textFill="#e8fff5" wrapText="true">
          <font>
             <Font size="17.0" />
          </font>
       </Button>
-      <ImageView fitHeight="24.0" fitWidth="33.0" layoutX="496.0" layoutY="29.0" preserveRatio="true">
-         <Image url="@../media/goBack.jpg" />
-      </ImageView>
    </children>
 </AnchorPane>
