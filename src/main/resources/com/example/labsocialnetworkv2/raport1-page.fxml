@@ -40,7 +40,7 @@
             <Font size="17.0" />
          </font>
       </Button>
-      <TextField fx:id="fileName" layoutX="282.0" layoutY="93.0" prefHeight="38.0" prefWidth="197.0" promptText="File name" style="-fx-background-color: #323949; -fx-background-radius: 15; -fx-text-fill: #e8fff5;">
+      <TextField fx:id="fileNameField" layoutX="282.0" layoutY="93.0" prefHeight="38.0" prefWidth="197.0" promptText="File name" style="-fx-background-color: #323949; -fx-background-radius: 15; -fx-text-fill: #e8fff5;">
          <font>
             <Font size="17.0" />
          </font>
