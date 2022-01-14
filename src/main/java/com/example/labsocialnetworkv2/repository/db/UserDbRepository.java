@@ -41,7 +41,7 @@ public class UserDbRepository implements UsernameRepository<Integer, User> {
         }
 
 
-        String sql = "INSERT INTO \"Users\" (\"username\",\"password\",\"FirstName\", \"LastName\", \"Birthday\",\"salt\") VALUES (?,?,?, ?, ?,?)";
+        String sql = "INSERT INTO users (\"username\",\"password\",first_name, last_name, birthday,\"salt\") VALUES (?,?,?, ?, ?,?)";
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, entity.getUsername());
@@ -70,7 +70,7 @@ public class UserDbRepository implements UsernameRepository<Integer, User> {
 
     @Override
     public void remove(Integer id) {
-        String sql = "DELETE FROM \"Users\" WHERE \"UserId\" = ?";
+        String sql = "DELETE FROM users WHERE user_id = ?";
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, id);
@@ -82,7 +82,7 @@ public class UserDbRepository implements UsernameRepository<Integer, User> {
     public String getSalt(Integer id){
         String salt=null;
         try (Connection connection = DriverManager.getConnection(url, username, password);
-             PreparedStatement ps = connection.prepareStatement("SELECT \"salt\" FROM \"Users\" WHERE \"UserId\" = ?")) {
+             PreparedStatement ps = connection.prepareStatement("SELECT \"salt\" FROM users WHERE user_id = ?")) {
             ps.setInt(1, id);
             ResultSet resultSet = ps.executeQuery();
             while (resultSet.next()) {
@@ -99,15 +99,15 @@ public class UserDbRepository implements UsernameRepository<Integer, User> {
     public User getByUsername(String usern){
         User user = null;
         try (Connection connection = DriverManager.getConnection(url, username, password);
-             PreparedStatement ps = connection.prepareStatement("SELECT \"UserId\",\"password\",\"FirstName\", \"LastName\", \"Birthday\" FROM \"Users\" WHERE \"username\" = ?")) {
+             PreparedStatement ps = connection.prepareStatement("SELECT user_id,\"password\",first_name, last_name, birthday FROM users WHERE \"username\" = ?")) {
             ps.setString(1, usern);
             ResultSet resultSet = ps.executeQuery();
             while (resultSet.next()) {
-                Integer id = resultSet.getInt("UserId");
+                Integer id = resultSet.getInt("user_id");
                 String pass = resultSet.getString("password");
-                String firstName = resultSet.getString("FirstName");
-                String lastName = resultSet.getString("LastName");
-                LocalDate birthday = resultSet.getDate("Birthday").toLocalDate();
+                String firstName = resultSet.getString("first_name");
+                String lastName = resultSet.getString("last_name");
+                LocalDate birthday = resultSet.getDate("birthday").toLocalDate();
                 user = new User(usern,pass,firstName, lastName, birthday);
                 user.setId(id);
             }
@@ -120,15 +120,15 @@ public class UserDbRepository implements UsernameRepository<Integer, User> {
     public User findOne(Integer id) {
         User user = null;
         try (Connection connection = DriverManager.getConnection(url, username, password);
-            PreparedStatement ps = connection.prepareStatement("SELECT \"username\",\"password\",\"FirstName\", \"LastName\", \"Birthday\" FROM \"Users\" WHERE \"UserId\" = ?")) {
+            PreparedStatement ps = connection.prepareStatement("SELECT \"username\",\"password\",first_name, last_name, birthday FROM users WHERE user_id = ?")) {
             ps.setInt(1, id);
             ResultSet resultSet = ps.executeQuery();
             while (resultSet.next()) {
                 String use = resultSet.getString("username");
                 String pass = resultSet.getString("password");
-                String firstName = resultSet.getString("FirstName");
-                String lastName = resultSet.getString("LastName");
-                LocalDate birthday = resultSet.getDate("Birthday").toLocalDate();
+                String firstName = resultSet.getString("first_name");
+                String lastName = resultSet.getString("last_name");
+                LocalDate birthday = resultSet.getDate("birthday").toLocalDate();
                 user = new User(use,pass,firstName, lastName, birthday);
                 user.setId(id);
             }
@@ -142,15 +142,15 @@ public class UserDbRepository implements UsernameRepository<Integer, User> {
     public Iterable<User> findAll() {
         Set<User> users = new HashSet<>();
         try (Connection connection = DriverManager.getConnection(url, username, password);
-             PreparedStatement statement = connection.prepareStatement("SELECT * from \"Users\"");
+             PreparedStatement statement = connection.prepareStatement("SELECT * from users");
              ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {
-                Integer id = resultSet.getInt("UserId");
+                Integer id = resultSet.getInt("user_id");
                 String use = resultSet.getString("username");
                 String pass = resultSet.getString("password");
-                String firstName = resultSet.getString("FirstName");
-                String lastName = resultSet.getString("LastName");
-                LocalDate birthday = resultSet.getDate("Birthday").toLocalDate();
+                String firstName = resultSet.getString("first_name");
+                String lastName = resultSet.getString("last_name");
+                LocalDate birthday = resultSet.getDate("birthday").toLocalDate();
                 User user = new User(use,pass,firstName, lastName, birthday);
                 user.setId(id);
                 users.add(user);
@@ -165,7 +165,7 @@ public class UserDbRepository implements UsernameRepository<Integer, User> {
     @Override
     public int size() {
         try (Connection connection = DriverManager.getConnection(url, username, password);
-            PreparedStatement ps = connection.prepareStatement("SELECT COUNT(*) AS Size FROM \"Users\"");
+            PreparedStatement ps = connection.prepareStatement("SELECT COUNT(*) AS Size FROM users");
             ResultSet resultSet = ps.executeQuery()) {
             while (resultSet.next()) {
                 Integer s = resultSet.getInt("Size");

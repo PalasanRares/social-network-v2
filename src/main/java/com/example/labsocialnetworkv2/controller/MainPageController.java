@@ -44,6 +44,7 @@ public class MainPageController implements Observer<RemoveUserEvent> {
         this.service = service;
         service.addObserver(this);
         friendshipTablePagination.setPageFactory(this::createPage);
+        friendshipTablePagination.setPageCount(service.getNumberOfFriendsForLoggedInUser() / 7 + 1);
         setNotificationsButton();
         pagina=service.createPageForUser(service.getLoggedInUser().getId());
     }
@@ -63,8 +64,8 @@ public class MainPageController implements Observer<RemoveUserEvent> {
     private TableView<User> createTable() {
         TableView<User> table = new TableView<>();
 
-        TableColumn<User, Integer> columnId = new TableColumn<>("User Id");
-        columnId.setCellValueFactory(new PropertyValueFactory<>("id"));
+        TableColumn<User, Integer> columnId = new TableColumn<>("Username");
+        columnId.setCellValueFactory(new PropertyValueFactory<>("username"));
         columnId.setPrefWidth(100);
 
         TableColumn<User, String> columnFirstName = new TableColumn<>("First Name");
@@ -148,6 +149,7 @@ public class MainPageController implements Observer<RemoveUserEvent> {
     public void update(RemoveUserEvent event) {
         initModel(friendshipTablePagination.getCurrentPageIndex());
         setNotificationsButton();
+        friendshipTablePagination.setPageCount(service.getNumberOfFriendsForLoggedInUser() / 7 + 1);
     }
 
 
@@ -265,6 +267,7 @@ public class MainPageController implements Observer<RemoveUserEvent> {
         List<User> friendshipsOnePageList = StreamSupport.stream(friendshipsOnPage.spliterator(), false).collect(Collectors.toList());
 
         tableView.setItems(FXCollections.observableArrayList(friendshipsOnePageList));
+        tableView.refresh();
     }
 
     private Node createPage(int pageIndex) {

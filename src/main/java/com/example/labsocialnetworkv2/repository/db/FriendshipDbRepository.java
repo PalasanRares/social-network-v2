@@ -28,7 +28,7 @@ public class FriendshipDbRepository implements PaginatedRepository<Tuple<User, U
 
     @Override
     public void save(Friendship entity) {
-        String sql = "INSERT INTO \"Friendships\" (\"FirstUserId\", \"SecondUserId\", \"FriendshipDate\") VALUES (?, ?, ?)";
+        String sql = "INSERT INTO friendships (first_user_id, second_user_id, friendship_date) VALUES (?, ?, ?)";
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, entity.getId().getFirst().getId());
@@ -42,7 +42,7 @@ public class FriendshipDbRepository implements PaginatedRepository<Tuple<User, U
 
     @Override
     public void remove(Tuple<User, User> id) {
-        String sql = "DELETE FROM \"Friendships\" WHERE \"FirstUserId\" = ? AND \"SecondUserId\" = ? OR \"FirstUserId\" = ? AND \"SecondUserId\" = ?";
+        String sql = "DELETE FROM friendships WHERE first_user_id = ? AND second_user_id = ? OR first_user_id = ? AND second_user_id = ?";
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, id.getFirst().getId());
@@ -59,28 +59,28 @@ public class FriendshipDbRepository implements PaginatedRepository<Tuple<User, U
     public Friendship findOne(Tuple<User, User> id) {
         Friendship friendship = null;
         try (Connection connection = DriverManager.getConnection(url, username, password);
-             PreparedStatement ps = connection.prepareStatement("SELECT * FROM \"Friendships\" WHERE \"FirstUserId\" = ? AND \"SecondUserId\" = ? " +
-                     "OR \"FirstUserId\" = ? AND \"SecondUserId\" = ?")) {
+             PreparedStatement ps = connection.prepareStatement("SELECT * FROM friendships WHERE first_user_id = ? AND second_user_id = ? " +
+                     "OR first_user_id = ? AND second_user_id = ?")) {
             ps.setInt(1, id.getFirst().getId());
             ps.setInt(2, id.getSecond().getId());
             ps.setInt(3, id.getSecond().getId());
             ps.setInt(4, id.getFirst().getId());
             ResultSet resultSet = ps.executeQuery();
             resultSet.next();
-            Integer id1 = resultSet.getInt("FirstUserId");
-            Integer id2 = resultSet.getInt("SecondUserId");
-            LocalDate friendshipDate = resultSet.getDate("FriendshipDate").toLocalDate();
+            Integer id1 = resultSet.getInt("first_user_id");
+            Integer id2 = resultSet.getInt("second_user_id");
+            LocalDate friendshipDate = resultSet.getDate("friendship_date").toLocalDate();
 
-            PreparedStatement psUsers = connection.prepareStatement("SELECT * FROM \"Users\" WHERE \"UserId\" = ? OR \"UserId\" = ?");
+            PreparedStatement psUsers = connection.prepareStatement("SELECT * FROM users WHERE user_id = ? OR user_id = ?");
             psUsers.setInt(1, id1);
             psUsers.setInt(2, id2);
             ResultSet users = psUsers.executeQuery();
             users.next();
-            User user1 = new User(users.getString("username"),users.getString("password"),users.getString("FirstName"), users.getString("LastName"), users.getDate("Birthday").toLocalDate());
-            user1.setId(users.getInt("UserId"));
+            User user1 = new User(users.getString("username"),users.getString("password"),users.getString("first_name"), users.getString("last_name"), users.getDate("birthday").toLocalDate());
+            user1.setId(users.getInt("user_id"));
             users.next();
-            User user2 = new User(users.getString("username"),users.getString("password"),users.getString("FirstName"), users.getString("LastName"), users.getDate("Birthday").toLocalDate());
-            user2.setId(users.getInt("UserId"));
+            User user2 = new User(users.getString("username"),users.getString("password"),users.getString("first_name"), users.getString("last_name"), users.getDate("birthday").toLocalDate());
+            user2.setId(users.getInt("user_id"));
 
             friendship = new Friendship(new Tuple<>(user1, user2), friendshipDate);
         } catch (SQLException e) {
@@ -93,23 +93,23 @@ public class FriendshipDbRepository implements PaginatedRepository<Tuple<User, U
     public Iterable<Friendship> findAll() {
         Set<Friendship> friendships = new HashSet<>();
         try (Connection connection = DriverManager.getConnection(url, username, password);
-             PreparedStatement statement = connection.prepareStatement("SELECT * FROM \"Friendships\"");
+             PreparedStatement statement = connection.prepareStatement("SELECT * FROM friendships");
              ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {
-                Integer id1 = resultSet.getInt("FirstUserId");
-                Integer id2 = resultSet.getInt("SecondUserId");
-                LocalDate friendshipDate = resultSet.getDate("FriendshipDate").toLocalDate();
+                Integer id1 = resultSet.getInt("first_user_id");
+                Integer id2 = resultSet.getInt("second_user_id");
+                LocalDate friendshipDate = resultSet.getDate("friendship_date").toLocalDate();
 
-                PreparedStatement psUsers = connection.prepareStatement("SELECT * FROM \"Users\" WHERE \"UserId\" = ? OR \"UserId\" = ?");
+                PreparedStatement psUsers = connection.prepareStatement("SELECT * FROM users WHERE user_id = ? OR user_id = ?");
                 psUsers.setInt(1, id1);
                 psUsers.setInt(2, id2);
                 ResultSet users = psUsers.executeQuery();
                 users.next();
-                User user1 = new User(users.getString("username"),users.getString("password"),users.getString("FirstName"), users.getString("LastName"), users.getDate("Birthday").toLocalDate());
-                user1.setId(users.getInt("UserId"));
+                User user1 = new User(users.getString("username"),users.getString("password"),users.getString("first_name"), users.getString("last_name"), users.getDate("birthday").toLocalDate());
+                user1.setId(users.getInt("user_id"));
                 users.next();
-                User user2 = new User(users.getString("username"),users.getString("password"),users.getString("FirstName"), users.getString("LastName"), users.getDate("Birthday").toLocalDate());
-                user2.setId(users.getInt("UserId"));
+                User user2 = new User(users.getString("username"),users.getString("password"),users.getString("first_name"), users.getString("last_name"), users.getDate("birthday").toLocalDate());
+                user2.setId(users.getInt("user_id"));
 
                 Friendship friendship = new Friendship(new Tuple<>(user1, user2), friendshipDate);
                 friendships.add(friendship);
@@ -122,9 +122,9 @@ public class FriendshipDbRepository implements PaginatedRepository<Tuple<User, U
 
     @Override
     public Iterable<Friendship> findAllPage(int pageNumber, int rowsOnPage, Integer userId) {
-        String sql = "SELECT * FROM \"Friendships\" " +
-                "WHERE \"FirstUserId\" = ? OR \"SecondUserId\" = ? " +
-                "ORDER BY \"FriendshipDate\" " +
+        String sql = "SELECT * FROM friendships " +
+                "WHERE first_user_id = ? OR second_user_id = ? " +
+                "ORDER BY friendship_date " +
                 "OFFSET (? * ?) ROWS " +
                 "FETCH NEXT ? ROWS ONLY";
         Set<Friendship> friendships = new HashSet<>();
@@ -137,20 +137,22 @@ public class FriendshipDbRepository implements PaginatedRepository<Tuple<User, U
             statement.setInt(5, rowsOnPage);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                Integer id1 = resultSet.getInt("FirstUserId");
-                Integer id2 = resultSet.getInt("SecondUserId");
-                LocalDate friendshipDate = resultSet.getDate("FriendshipDate").toLocalDate();
+                Integer id1 = resultSet.getInt("first_user_id");
+                Integer id2 = resultSet.getInt("second_user_id");
+                LocalDate friendshipDate = resultSet.getDate("friendship_date").toLocalDate();
 
-                PreparedStatement psUsers = connection.prepareStatement("SELECT * FROM \"Users\" WHERE \"UserId\" = ? OR \"UserId\" = ?");
+                PreparedStatement psUsers = connection.prepareStatement("SELECT * FROM users WHERE user_id = ? OR user_id = ?");
                 psUsers.setInt(1, id1);
                 psUsers.setInt(2, id2);
                 ResultSet users = psUsers.executeQuery();
                 users.next();
-                User user1 = new User(users.getString("FirstName"), users.getString("LastName"), users.getDate("Birthday").toLocalDate());
-                user1.setId(users.getInt("UserId"));
+                User user1 = new User(users.getString("first_name"), users.getString("last_name"), users.getDate("birthday").toLocalDate());
+                user1.setId(users.getInt("user_id"));
+                user1.setUsername(users.getString("username"));
                 users.next();
-                User user2 = new User(users.getString("FirstName"), users.getString("LastName"), users.getDate("Birthday").toLocalDate());
-                user2.setId(users.getInt("UserId"));
+                User user2 = new User(users.getString("first_name"), users.getString("last_name"), users.getDate("birthday").toLocalDate());
+                user2.setId(users.getInt("user_id"));
+                user2.setUsername(users.getString("username"));
 
                 Friendship friendship = new Friendship(new Tuple<>(user1, user2), friendshipDate);
                 friendships.add(friendship);
@@ -164,8 +166,24 @@ public class FriendshipDbRepository implements PaginatedRepository<Tuple<User, U
     @Override
     public int size() {
         try (Connection connection = DriverManager.getConnection(url, username, password);
-             PreparedStatement ps = connection.prepareStatement("SELECT COUNT(*) AS Size FROM \"Friendships\"");
+             PreparedStatement ps = connection.prepareStatement("SELECT COUNT(*) AS Size FROM friendships");
              ResultSet resultSet = ps.executeQuery()) {
+            resultSet.next();
+            return resultSet.getInt("Size");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    @Override
+    public int findTotalSize(Integer userId) {
+        String sql = "SELECT COUNT(*) AS Size FROM friendships WHERE first_user_id = ? OR second_user_id = ?";
+        try (Connection connection = DriverManager.getConnection(url, username, password);
+            PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            ps.setInt(2, userId);
+            ResultSet resultSet = ps.executeQuery();
             resultSet.next();
             return resultSet.getInt("Size");
         } catch (SQLException e) {
