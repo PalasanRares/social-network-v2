@@ -38,15 +38,15 @@
     <TextField fx:id="textFieldUsername" layoutX="225.0" layoutY="170.0" style="-fx-background-color: #323949; -fx-background-radius: 15; -fx-text-fill: #e8fff5;" />
     <Label layoutX="134.0" layoutY="171.0" text="Username" textFill="WHITE">
       <font>
-         <Font name="Comic Sans MS Bold Italic" size="15.0" />
+         <Font name="System Bold Italic" size="15.0" />
       </font></Label>
    <Label layoutX="136.0" layoutY="220.0" text="Password" textFill="WHITE">
       <font>
-         <Font name="Comic Sans MS Bold Italic" size="15.0" />
+         <Font name="System Bold Italic" size="15.0" />
       </font>
    </Label>
    <PasswordField fx:id="textFieldPassword" layoutX="225.0" layoutY="218.0" style="-fx-background-color: #323949; -fx-background-radius: 15; -fx-text-fill: #e8fff5;" />
-   <Hyperlink fx:id="signUp" layoutX="257.0" layoutY="331.0" onAction="#goSignUp" text="Sign Up" textFill="WHITE">
+   <Hyperlink fx:id="signUp" layoutX="258.0" layoutY="339.0" onAction="#goSignUp" text="Sign Up" textFill="WHITE">
       <font>
          <Font size="20.0" />
       </font></Hyperlink>
@@ -60,4 +60,5 @@
          <Font size="17.0" />
       </font>
    </Button>
+   <Label layoutX="294.0" layoutY="330.0" text="or" textFill="WHITE" />
 </AnchorPane>

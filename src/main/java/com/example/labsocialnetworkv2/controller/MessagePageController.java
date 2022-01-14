@@ -66,6 +66,7 @@ public class MessagePageController  { //TODO: de vazut cum fac cu Observer
 
     public void init() {
 
+         scpn.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
         vboxMsg.heightProperty().addListener(new ChangeListener<Number>() {
             @Override
@@ -242,6 +243,10 @@ public class MessagePageController  { //TODO: de vazut cum fac cu Observer
              hBox.getChildren().add(textFlow);
             vboxMsg.getChildren().add(hBox);
 
+    }
+
+    public void handleRefreshButton(ActionEvent actionEvent) {
+        init();
     }
 }
 
