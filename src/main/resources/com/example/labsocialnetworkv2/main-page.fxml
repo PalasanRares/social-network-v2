@@ -12,12 +12,12 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="anp" prefHeight="497.0" prefWidth="709.0" style="-fx-background-color: #212129;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.labsocialnetworkv2.controller.MainPageController">
-    <Button alignment="CENTER" layoutX="210.0" layoutY="335.0" mnemonicParsing="false" onAction="#handleRemoveButton" style="-fx-background-color: #3d3e51; -fx-background-radius: 15;" text="Remove" textAlignment="CENTER" textFill="#e8fff5">
+<AnchorPane fx:id="anp" prefHeight="548.0" prefWidth="709.0" style="-fx-background-color: #212129;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.labsocialnetworkv2.controller.MainPageController">
+    <Button alignment="CENTER" layoutX="210.0" layoutY="445.0" mnemonicParsing="false" onAction="#handleRemoveButton" style="-fx-background-color: #3d3e51; -fx-background-radius: 15;" text="Remove" textAlignment="CENTER" textFill="#e8fff5">
       <font>
          <Font size="17.0" />
       </font></Button>
-   <Pagination fx:id="friendshipTablePagination" prefHeight="320.0" prefWidth="512.0">
+   <Pagination fx:id="friendshipTablePagination" prefHeight="428.0" prefWidth="512.0">
       <padding>
          <Insets left="10.0" />
       </padding>
@@ -25,7 +25,7 @@
          <URL value="@css/pagination.css" />
          <URL value="@css/friend-requests-table.css" />
       </stylesheets></Pagination>
-   <GridPane alignment="CENTER" layoutX="504.0" prefHeight="486.0" prefWidth="190.0" style="-fx-padding: 15 0;">
+   <GridPane alignment="CENTER" layoutX="504.0" prefHeight="548.0" prefWidth="190.0" style="-fx-padding: 15 0;">
      <columnConstraints>
        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
      </columnConstraints>
@@ -77,7 +77,7 @@
          </Button>
       </children>
    </GridPane>
-   <Button fx:id="notificationsButton" contentDisplay="CENTER" layoutX="14.0" layoutY="332.0" mnemonicParsing="false" onAction="#handleNotificationsButton" prefHeight="33.0" prefWidth="40.0" style="-fx-background-color: #323949; -fx-background-radius: 15;" textFill="#e8fff5">
+   <Button fx:id="notificationsButton" contentDisplay="CENTER" layoutX="14.0" layoutY="490.0" mnemonicParsing="false" onAction="#handleNotificationsButton" prefHeight="33.0" prefWidth="40.0" style="-fx-background-color: #323949; -fx-background-radius: 15;" textFill="#e8fff5">
       <graphic>
          <ImageView fx:id="notificationsIcon" fitHeight="34.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
             <image>
