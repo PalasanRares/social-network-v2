@@ -7,7 +7,7 @@
 <?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="500.0" prefWidth="300.0" style="-fx-background-color: #212129;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.labsocialnetworkv2.controller.SearchUserController">
-    <ListView fx:id="listView" layoutX="17.0" layoutY="66.0" prefHeight="368.0" prefWidth="266.0" style="-fx-background-color: #40445a; -fx-background-radius: 15;" />
+    <ListView fx:id="listView" layoutX="17.0" layoutY="66.0" prefHeight="368.0" prefWidth="266.0" style="-fx-background-color: #40445a; -fx-background-radius: 15;" stylesheets="@css/list-view.css" />
     <TextField fx:id="textFieldName" alignment="CENTER" layoutX="17.0" layoutY="25.0" prefWidth="171.0" promptText="Type name..." style="-fx-background-color: #40445a; -fx-background-radius: 15; -fx-text-fill: #e8fff5;">
       <font>
          <Font size="17.0" />
