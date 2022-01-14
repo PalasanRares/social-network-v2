@@ -65,7 +65,7 @@ public class MessagePageController  { //TODO: de vazut cum fac cu Observer
 
 
     public void init() {
-
+        vboxMsg.getChildren().clear();
          scpn.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
         vboxMsg.heightProperty().addListener(new ChangeListener<Number>() {
