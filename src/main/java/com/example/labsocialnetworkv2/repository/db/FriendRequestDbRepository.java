@@ -23,7 +23,7 @@ public class FriendRequestDbRepository implements ModifiableRepository<Tuple<Use
 
     @Override
     public void save(FriendRequest entity) {
-        String sql = "INSERT INTO friend_requests (\"from\", \"to\", status ,\"dataTrimiterii\") VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO friend_requests (\"from\", \"to\", status ,sending_date) VALUES (?, ?, ?, ?)";
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, entity.getId().getFirst().getId());
@@ -65,18 +65,18 @@ public class FriendRequestDbRepository implements ModifiableRepository<Tuple<Use
                 Integer id1 = resultSet.getInt("from");
                 Integer id2 = resultSet.getInt("to");
                 String status = resultSet.getString("status");
-                LocalDate requestDate = resultSet.getDate("dataTrimiterii").toLocalDate();
+                LocalDate requestDate = resultSet.getDate("sending_date").toLocalDate();
 
-                PreparedStatement psUsers = connection.prepareStatement("SELECT * FROM \"Users\" WHERE \"UserId\" = ? OR \"UserId\" = ?");
+                PreparedStatement psUsers = connection.prepareStatement("SELECT * FROM users WHERE user_id = ? OR user_id = ?");
                 psUsers.setInt(1, id1);
                 psUsers.setInt(2, id2);
                 ResultSet users = psUsers.executeQuery();
                 users.next();
-                User user1 = new User(users.getString("username"),users.getString("password"),users.getString("FirstName"), users.getString("LastName"), users.getDate("Birthday").toLocalDate());
-                user1.setId(users.getInt("UserId"));
+                User user1 = new User(users.getString("username"),users.getString("password"),users.getString("first_name"), users.getString("last_name"), users.getDate("birthday").toLocalDate());
+                user1.setId(users.getInt("user_id"));
                 users.next();
-                User user2 = new User(users.getString("username"),users.getString("password"),users.getString("FirstName"), users.getString("LastName"), users.getDate("Birthday").toLocalDate());
-                user2.setId(users.getInt("UserId"));
+                User user2 = new User(users.getString("username"),users.getString("password"),users.getString("first_name"), users.getString("last_name"), users.getDate("birthday").toLocalDate());
+                user2.setId(users.getInt("user_id"));
 
                 request = new FriendRequest(new Tuple<>(user1, user2), status, requestDate);
             }
@@ -96,21 +96,21 @@ public class FriendRequestDbRepository implements ModifiableRepository<Tuple<Use
                 Integer from = resultSet.getInt("from");
                 Integer to = resultSet.getInt("to");
                 String status = resultSet.getString("status");
-                LocalDate sendDate = resultSet.getDate("dataTrimiterii").toLocalDate();
+                LocalDate sendDate = resultSet.getDate("sending_date").toLocalDate();
 
-                PreparedStatement psUsers = connection.prepareStatement("SELECT * FROM \"Users\" WHERE \"UserId\" = ? OR \"UserId\" = ?");
+                PreparedStatement psUsers = connection.prepareStatement("SELECT * FROM users WHERE user_id = ? OR user_id = ?");
                 psUsers.setInt(1, from);
                 psUsers.setInt(2, to);
                 ResultSet rsUsers = psUsers.executeQuery();
                 User user1 = new User();
                 User user2 = new User();
                 while (rsUsers.next()) {
-                    if (rsUsers.getInt("UserId") == from) {
-                        user1 = new User(rsUsers.getString("FirstName"), rsUsers.getString("LastName"), rsUsers.getDate("Birthday").toLocalDate());
+                    if (rsUsers.getInt("user_id") == from) {
+                        user1 = new User(rsUsers.getString("first_name"), rsUsers.getString("last_name"), rsUsers.getDate("birthday").toLocalDate());
                         user1.setId(from);
                     }
-                    if (rsUsers.getInt("UserId") == to) {
-                        user2 = new User(rsUsers.getString("FirstName"), rsUsers.getString("LastName"), rsUsers.getDate("Birthday").toLocalDate());
+                    if (rsUsers.getInt("user_id") == to) {
+                        user2 = new User(rsUsers.getString("first_name"), rsUsers.getString("last_name"), rsUsers.getDate("birthday").toLocalDate());
                         user2.setId(to);
                     }
                 }
@@ -136,21 +136,21 @@ public class FriendRequestDbRepository implements ModifiableRepository<Tuple<Use
                 Integer from = resultSet.getInt("from");
                 Integer to = resultSet.getInt("to");
                 String status = resultSet.getString("status");
-                LocalDate sendDate = resultSet.getDate("dataTrimiterii").toLocalDate();
+                LocalDate sendDate = resultSet.getDate("sending_date").toLocalDate();
 
-                PreparedStatement psUsers = connection.prepareStatement("SELECT * FROM \"Users\" WHERE \"UserId\" = ? OR \"UserId\" = ?");
+                PreparedStatement psUsers = connection.prepareStatement("SELECT * FROM users WHERE user_id = ? OR user_id = ?");
                 psUsers.setInt(1, from);
                 psUsers.setInt(2, to);
                 ResultSet users = psUsers.executeQuery();
                 User user1 = new User();
                 User user2 = new User();
                 while (users.next()) {
-                    if (users.getInt("UserId") == from) {
-                        user1 = new User(users.getString("username"),users.getString("password"),users.getString("FirstName"), users.getString("LastName"), users.getDate("Birthday").toLocalDate());
+                    if (users.getInt("user_id") == from) {
+                        user1 = new User(users.getString("username"),users.getString("password"),users.getString("first_name"), users.getString("last_name"), users.getDate("birthday").toLocalDate());
                         user1.setId(from);
                     }
-                    if (users.getInt("UserId") == to) {
-                        user2 = new User(users.getString("username"),users.getString("password"),users.getString("FirstName"), users.getString("LastName"), users.getDate("Birthday").toLocalDate());
+                    if (users.getInt("user_id") == to) {
+                        user2 = new User(users.getString("username"),users.getString("password"),users.getString("first_name"), users.getString("last_name"), users.getDate("birthday").toLocalDate());
                         user2.setId(to);
                     }
                 }

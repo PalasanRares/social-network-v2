@@ -640,4 +640,7 @@ public class Service implements Observable<RemoveUserEvent> {
         }
     }
 
+    public int getNumberOfFriendsForLoggedInUser() {
+        return friendshipRepository.findTotalSize(loggedInUser.getId());
+    }
 }
