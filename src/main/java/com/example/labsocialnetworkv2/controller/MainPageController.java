@@ -267,6 +267,7 @@ public class MainPageController implements Observer<RemoveUserEvent> {
         List<User> friendshipsOnePageList = StreamSupport.stream(friendshipsOnPage.spliterator(), false).collect(Collectors.toList());
 
         tableView.setItems(FXCollections.observableArrayList(friendshipsOnePageList));
+        tableView.refresh();
     }
 
     private Node createPage(int pageIndex) {
