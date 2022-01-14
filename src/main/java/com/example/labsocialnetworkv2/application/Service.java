@@ -140,6 +140,9 @@ public class Service implements Observable<RemoveUserEvent> {
             if (friendRequestRepository.findOne(friendship.getId()) != null) {
                 friendRequestRepository.remove(friendship.getId());
             }
+            if (friendRequestRepository.findOne(new Tuple<>(user2, user1)) != null) {
+                friendRequestRepository.remove(new Tuple<>(user2, user1));
+            }
         }
         notifyObservers(new RemoveUserEvent(friendship.getId().getFirst()));
     }
