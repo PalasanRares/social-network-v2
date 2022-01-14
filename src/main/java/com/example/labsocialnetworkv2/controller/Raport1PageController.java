@@ -50,13 +50,13 @@ public class Raport1PageController {
 
     private void createTable() {
         messageColumn.setCellValueFactory(new PropertyValueFactory<>("message"));
-        messageColumn.setPrefWidth(100);
+
 
         dateColumn.setCellValueFactory(new PropertyValueFactory<>("data"));
-        dateColumn.setPrefWidth(100);
+
 
         replyColumn.setCellValueFactory(new PropertyValueFactory<>("reply"));
-        replyColumn.setPrefWidth(100);
+
 
     }
 
